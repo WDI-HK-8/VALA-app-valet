@@ -1,0 +1,70 @@
+<ion-view>
+  <ion-header-bar>
+    <h1 class="title">Signup</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeSignup()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <form ng-submit="doSignup()">
+      <div class="list">
+        
+        <label class="item item-input">
+          <span class="input-label">First name</span>
+          <input type="text" ng-model="registrationForm.first_name">
+        </label>  
+
+        <label class="item item-input">
+          <span class="input-label">Last name</span>
+          <input type="text" ng-model="registrationForm.last_name">
+        </label>      
+
+        <label class="item item-input">
+          <span class="input-label">Phone number</span>
+          <input type="text" ng-model="registrationForm.phone_number">
+        </label>
+
+        <label class="item item-input">
+          <span class="input-label">HKID</span>
+          <input type="text" ng-model="registrationForm.HKID">
+        </label>
+
+        <label class="item item-input">
+          <span class="input-label">Driver license expiry date</span>
+          <input type="text" ng-model="registrationForm.driver_license_expiry_date">
+        </label>
+
+        <label class="item item-input">
+          <span class="input-label">Driving experience</span>
+          <input type="text" ng-model="registrationForm.years_of_driving">
+        </label>
+
+
+        <label class="item item-input">
+          <span class="input-label">Manual?</span>
+          <input type="text" ng-model="registrationForm.manual">
+        </label>
+
+        <label class="item item-input">
+          <span class="input-label">Email</span>
+          <input type="text" ng-model="registrationForm.email">
+        </label>
+        
+        <label class="item item-input">
+          <span class="input-label">Password</span>
+          <input type="password" ng-model="registrationForm.password">
+        </label>
+
+        <label class="item item-input">
+          <span class="input-label">Confirm Password</span>
+          <input type="password" ng-model="registrationForm.password_confirmation">
+        </label>
+
+        <label class="item">
+          <button class="button button-block button-positive" type="submit">Sign up</button>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+</ion-view>
+

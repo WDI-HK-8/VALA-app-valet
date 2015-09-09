@@ -18,10 +18,16 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item menu-close href="#/app/home">
+        <ion-item menu-close href="#/app/home" ng-hide="currentUser == null">
           Home
         </ion-item>
-        <ion-item menu-close href="#/app/profile">
+        <ion-item menu-close ng-show="currentUser == null" href="#/app/signup">
+          Sign Up
+        </ion-item> 
+        <ion-item menu-close ng-show="currentUser == null" href="#/app/login">
+          Login
+        </ion-item> 
+        <ion-item menu-close href="#/app/profile" ng-hide="currentUser == null">
           Profile
         </ion-item>
         <ion-item menu-close href="#/app/tutorial">
@@ -29,6 +35,9 @@
         </ion-item>
         <ion-item menu-close href="#/app/support">
           Support
+        </ion-item>
+        <ion-item menu-close href="#/app/landing" ng-click="logout()" ng-hide="currentUser == null">
+          Logout
         </ion-item>
       </ion-list>
     </ion-content>
