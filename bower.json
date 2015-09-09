@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "ng-token-auth": "~0.0.28",
-    "angular-google-maps": "~2.2.0"
+    "angular-google-maps": "~2.2.0",
+    "angular-simple-logger": "~0.0.1"
   }
 }
