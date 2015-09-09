@@ -90,14 +90,13 @@ angular.module('starter.controllers', [])
 .controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi){
   nemSimpleLogger.doLog = true; //default is true
   nemSimpleLogger.currentLevel = nemSimpleLogger.LEVELS.debug
-  
+
   $scope.myLocation = {
     lng : '',
     lat: ''
   }
-   
-  $scope.drawMap = function(position) {
- 
+
+  $scope.drawSelfMap = function(position) { 
     //$scope.$apply is needed to trigger the digest cycle when the geolocation arrives and to update all the watchers
     $scope.$apply(function() {
       $scope.myLocation.lng = position.coords.longitude;
@@ -108,26 +107,89 @@ angular.module('starter.controllers', [])
           latitude: $scope.myLocation.lat,
           longitude: $scope.myLocation.lng
         },
-        zoom: 14,
-        pan: 1
+        zoom: 18,
+        pan: 2
       };
- 
+
       $scope.marker = {
-        id: 0,
+        id: "you",
         coords: {
           latitude: $scope.myLocation.lat,
           longitude: $scope.myLocation.lng
+        },
+        options: {
+            animation: google.maps.Animation.BOUNCE,
+            icon: 'http://labs.google.com/ridefinder/images/mm_20_black.png'            
         }
-      }; 
-       
-      $scope.marker.options = {
-        draggable: false,
-        labelContent: "lat: " + $scope.marker.coords.latitude + '<br/> ' + 'lon: ' + $scope.marker.coords.longitude,
-        labelAnchor: "80 120",
-        labelClass: "marker-labels"
-      };  
+      };
+
+      $scope.pickUpMarkers =[
+        {
+          id: "a",
+          title: "abc",
+          latitude: $scope.myLocation.lat+0.002,
+          longitude: $scope.myLocation.lng+0.002,
+          location: "fasfdasf",
+          car_make: "safdsfda",
+          name: "asdfsd",
+          icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png',
+          show: false,
+          clickPin: function(){  
+          }
+        },
+        {
+          id: "b",
+          title: "bde", 
+          latitude: $scope.myLocation.lat+0.001,
+          longitude: $scope.myLocation.lng+0.001,
+          location: "fasfdasf",
+          car_make: "safdsfda",
+          name: "asdfsd",
+          icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png',
+          show: false,
+          clickPin: function(){
+          }
+        }
+      ]
+
+      $scope.dropOffMarkers =[
+        {
+          id: "a",
+          title: "abc",
+          latitude: $scope.myLocation.lat+0.0002,
+          longitude: $scope.myLocation.lng+0.0002,
+          location: "fasfdasf",
+          car_make: "safdsfda",
+          name: "asdfsd",
+          icon: 'http://labs.google.com/ridefinder/images/mm_20_red.png',
+          show: false,
+          clickPin: function(){  
+          }
+        },
+        {
+          id: "b",
+          title: "bde", 
+          latitude: $scope.myLocation.lat+0.0001,
+          longitude: $scope.myLocation.lng+0.0001,
+          location: "fasfdasf",
+          car_make: "safdsfda",
+          name: "asdfsd",
+          icon: 'http://labs.google.com/ridefinder/images/mm_20_red.png',
+          show: false,
+          clickPin: function(){
+          }
+        }
+      ]
+
+      
+      console.log($scope.locationMarkers)
+
     });
   }
- 
-  navigator.geolocation.getCurrentPosition($scope.drawMap); 
+
+
+
+  navigator.geolocation.getCurrentPosition($scope.drawSelfMap); 
+  
+
 })
