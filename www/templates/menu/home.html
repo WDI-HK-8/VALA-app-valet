@@ -22,7 +22,7 @@
           models  = "pickUpMarkers"
           coords  = "'self'"
           icon    = "'icon'"
-          click  =  "clickPin">
+          click  =  "clickPin()">
           <ui-gmap-windows show="show">
             <div ng-non-bindable>
               <h2>{{title}}</h2>
@@ -37,7 +37,7 @@
           models  = "dropOffMarkers"
           coords  = "'self'"
           icon    = "'icon'"
-          click  =  "clickPin">
+          click  =  "clickPin()">
         <ui-gmap-windows show="show">
           <div ng-non-bindable>
             <h2>{{title}}</h2>
@@ -47,6 +47,18 @@
           </div>
         </ui-gmap-windows>
         </ui-gmap-markers>
+
+        <ui-gmap-polyline 
+        ng-repeat="p in polylines" 
+        path="p.path" 
+        stroke="p.stroke" 
+        visible='p.visible'
+        geodesic='p.geodesic' 
+        fit="false" 
+        editable="p.editable" 
+        draggable="p.draggable" 
+        icons="p.icons">
+      </ui-gmap-polyline>
 
     </ui-gmap-google-map>
      

@@ -126,7 +126,7 @@ angular.module('starter.controllers', [])
       $scope.pickUpMarkers =[
         {
           id: "a",
-          title: "abc",
+          title: "pick up 1",
           latitude: $scope.myLocation.lat+0.002,
           longitude: $scope.myLocation.lng+0.002,
           location: "fasfdasf",
@@ -134,12 +134,72 @@ angular.module('starter.controllers', [])
           name: "asdfsd",
           icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png',
           show: false,
-          clickPin: function(){  
+          clickPin: function(){
+            this;
+            var directionsService = new google.maps.DirectionsService();
+            var directionsDisplay = new google.maps.DirectionsRenderer();
+            var matrixService     = new google.maps.DistanceMatrixService();
+            
+            var selfLocation      = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
+            var destination       = new google.maps.LatLng(this.latitude, this.longitude) 
+       
+
+            var request = {
+              origin : selfLocation,
+              destination : destination,
+              travelMode : google.maps.TravelMode.DRIVING
+            }      
+            
+            directionsService.route(request, function(response, status) {
+              if (status == google.maps.DirectionsStatus.OK) {
+                  directionsDisplay.setDirections(response);
+              
+                $scope.path_coords = response.routes[0].overview_path
+                $scope.polylines = [
+                  {
+                    id: 888,
+                    path: $scope.path_coords, 
+                    stroke: {
+                        color: 'red',
+                        weight: 2
+                    },
+                    editable: false,
+                    draggable: false,
+                    geodesic: false,
+                    visible: true,
+                    icons: [{
+                        icon: {
+                        },
+                        offset: '25px',
+                        repeat: '50px'
+                    }]
+                  }
+                ];
+              }              
+            });
+
+            var durationDistance = {
+              origins : [selfLocation],
+              destinations : [destination],
+              travelMode : google.maps.TravelMode.DRIVING
+            } 
+            matrixService.getDistanceMatrix(durationDistance, function(response, status){
+              if (status == google.maps.DistanceMatrixStatus.OK){
+
+                var originAddress = response.originAddresses
+                var destinationAddress = response.destinationAddresses
+
+                var distanceEST = response.rows[0].elements[0].distance.text
+                var timeEST     = response.rows[0].elements[0].duration.text
+
+                console.log(originAddress, destinationAddress, distanceEST, timeEST)
+              }
+            })  
           }
         },
         {
           id: "b",
-          title: "bde", 
+          title: "pick up 2", 
           latitude: $scope.myLocation.lat+0.001,
           longitude: $scope.myLocation.lng+0.001,
           location: "fasfdasf",
@@ -148,6 +208,68 @@ angular.module('starter.controllers', [])
           icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png',
           show: false,
           clickPin: function(){
+            this;
+            var directionsService = new google.maps.DirectionsService();
+            var directionsDisplay = new google.maps.DirectionsRenderer();
+            var matrixService     = new google.maps.DistanceMatrixService();
+            
+            var selfLocation      = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
+            var destination       = new google.maps.LatLng(this.latitude, this.longitude) 
+       
+            // console.log(selfLocation, destination)
+            
+            var request = {
+              origin : selfLocation,
+              destination : destination,
+              travelMode : google.maps.TravelMode.DRIVING
+            }      
+            
+            directionsService.route(request, function(response, status) {
+              if (status == google.maps.DirectionsStatus.OK) {
+                  directionsDisplay.setDirections(response);
+              
+                $scope.path_coords = response.routes[0].overview_path
+                $scope.polylines = [
+                  {
+                    id: 888,
+                    path: $scope.path_coords, 
+                    stroke: {
+                        color: 'red',
+                        weight: 2
+                    },
+                    editable: false,
+                    draggable: false,
+                    geodesic: false,
+                    visible: true,
+                    icons: [{
+                        icon: {
+                        },
+                        offset: '25px',
+                        repeat: '50px'
+                    }]
+                  }
+                ];
+              }              
+            });
+
+            var durationDistance = {
+              origins : [selfLocation],
+              destinations : [destination],
+              travelMode : google.maps.TravelMode.DRIVING
+            } 
+            matrixService.getDistanceMatrix(durationDistance, function(response, status){
+              
+              if (status == google.maps.DistanceMatrixStatus.OK){
+                // console.log(response, status)
+                var originAddress = response.originAddresses
+                var destinationAddress = response.destinationAddresses
+
+                var distanceEST = response.rows[0].elements[0].distance.text
+                var timeEST     = response.rows[0].elements[0].duration.text
+
+                console.log(originAddress, destinationAddress, distanceEST, timeEST)
+              }
+            })  
           }
         }
       ]
@@ -155,7 +277,7 @@ angular.module('starter.controllers', [])
       $scope.dropOffMarkers =[
         {
           id: "a",
-          title: "abc",
+          title: "drop off 1",
           latitude: $scope.myLocation.lat+0.0002,
           longitude: $scope.myLocation.lng+0.0002,
           location: "fasfdasf",
@@ -163,12 +285,72 @@ angular.module('starter.controllers', [])
           name: "asdfsd",
           icon: 'http://labs.google.com/ridefinder/images/mm_20_red.png',
           show: false,
-          clickPin: function(){  
+          clickPin: function(){
+            this;
+            var directionsService = new google.maps.DirectionsService();
+            var directionsDisplay = new google.maps.DirectionsRenderer();
+            var matrixService     = new google.maps.DistanceMatrixService();
+            
+            var selfLocation      = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
+            var destination       = new google.maps.LatLng(this.latitude, this.longitude) 
+       
+
+            var request = {
+              origin : selfLocation,
+              destination : destination,
+              travelMode : google.maps.TravelMode.DRIVING
+            }      
+            
+            directionsService.route(request, function(response, status) {
+              if (status == google.maps.DirectionsStatus.OK) {
+                  directionsDisplay.setDirections(response);
+              
+                $scope.path_coords = response.routes[0].overview_path
+                $scope.polylines = [
+                  {
+                    id: 888,
+                    path: $scope.path_coords, 
+                    stroke: {
+                        color: 'red',
+                        weight: 2
+                    },
+                    editable: false,
+                    draggable: false,
+                    geodesic: false,
+                    visible: true,
+                    icons: [{
+                        icon: {
+                        },
+                        offset: '25px',
+                        repeat: '50px'
+                    }]
+                  }
+                ];
+              }              
+            });
+
+            var durationDistance = {
+              origins : [selfLocation],
+              destinations : [destination],
+              travelMode : google.maps.TravelMode.DRIVING
+            } 
+            matrixService.getDistanceMatrix(durationDistance, function(response, status){
+              if (status == google.maps.DistanceMatrixStatus.OK){
+
+                var originAddress = response.originAddresses
+                var destinationAddress = response.destinationAddresses
+
+                var distanceEST = response.rows[0].elements[0].distance.text
+                var timeEST     = response.rows[0].elements[0].duration.text
+
+                console.log(originAddress, destinationAddress, distanceEST, timeEST)
+              }
+            })  
           }
         },
         {
           id: "b",
-          title: "bde", 
+          title: "drop off 2", 
           latitude: $scope.myLocation.lat+0.0001,
           longitude: $scope.myLocation.lng+0.0001,
           location: "fasfdasf",
@@ -177,13 +359,69 @@ angular.module('starter.controllers', [])
           icon: 'http://labs.google.com/ridefinder/images/mm_20_red.png',
           show: false,
           clickPin: function(){
+            this;
+            var directionsService = new google.maps.DirectionsService();
+            var directionsDisplay = new google.maps.DirectionsRenderer();
+            var matrixService     = new google.maps.DistanceMatrixService();
+            
+            var selfLocation      = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
+            var destination       = new google.maps.LatLng(this.latitude, this.longitude) 
+
+            var request = {
+              origin : selfLocation,
+              destination : destination,
+              travelMode : google.maps.TravelMode.DRIVING
+            }      
+            
+            directionsService.route(request, function(response, status) {
+              if (status == google.maps.DirectionsStatus.OK) {
+                  directionsDisplay.setDirections(response);
+              
+                $scope.path_coords = response.routes[0].overview_path
+                $scope.polylines = [
+                  {
+                    id: 888,
+                    path: $scope.path_coords, 
+                    stroke: {
+                        color: 'red',
+                        weight: 2
+                    },
+                    editable: false,
+                    draggable: false,
+                    geodesic: false,
+                    visible: true,
+                    icons: [{
+                        icon: {
+                        },
+                        offset: '25px',
+                        repeat: '50px'
+                    }]
+                  }
+                ];
+              }              
+            });
+
+            var durationDistance = {
+              origins : [selfLocation],
+              destinations : [destination],
+              travelMode : google.maps.TravelMode.DRIVING
+            } 
+            matrixService.getDistanceMatrix(durationDistance, function(response, status){
+              if (status == google.maps.DistanceMatrixStatus.OK){
+
+                var originAddress = response.originAddresses
+                var destinationAddress = response.destinationAddresses
+
+                var distanceEST = response.rows[0].elements[0].distance.text
+                var timeEST     = response.rows[0].elements[0].duration.text
+
+                console.log(originAddress, destinationAddress, distanceEST, timeEST)
+              }
+            })  
           }
         }
       ]
-
-      
-      console.log($scope.locationMarkers)
-
+        
     });
   }
 
