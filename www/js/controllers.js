@@ -2,11 +2,12 @@ angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, $auth, $ionicPopup, $window, $log, $state, $http) {
 
+  $scope.rootURL = "http://localhost:3000/"  
+
   var validateUser = function(){
     $scope.currentUser = JSON.parse($window.localStorage.getItem('current-user'))
-    // console.log("currentUser", $scope.currentUser)
+    
   };
-
 
   // Form data for the login modal
   $scope.loginData = {};
@@ -17,13 +18,13 @@ angular.module('starter.controllers', [])
     $auth.submitLogin($scope.loginData).then(function(response){
       $window.localStorage.setItem('current-user', JSON.stringify(response));
       validateUser();
-      console.log($scope.currentUser)
+      
 
       $state.go('app.home');
 
       var valetID = response.id
-      var url = "http://localhost:3000/api/v1/valets/" + valetID
-      // console.log(url)
+      var url = $scope.rootURL + "api/v1/valets/" + valetID
+      
       var data = {
         valet: {
           status: 'available'
@@ -31,14 +32,13 @@ angular.module('starter.controllers', [])
       }
 
       $http.patch(url, data).success(function(change_status){
-        // console.log(change_status)
+       
       }).error(function(change_status){
-        console.log(change_status)
+        console.log(change_status)        
       })
-      
-      // console.log(response)
+ 
     }).catch(function(response){
-      // console.log(response)
+      
       $ionicPopup.alert({
         title: 'Wrong password',
         template: 'Try again'
@@ -76,13 +76,13 @@ angular.module('starter.controllers', [])
 
   var valetID = $scope.currentUser.id
   console.log(valetID)
-  var url = "http://localhost:3000/api/v1/valets/" + valetID
+  var url = $scope.rootURL + "api/v1/valets/" + valetID
   
   $http.get(url).success(function(response){
-    console.log (response)
+    
     $scope.valetInfo = response
   }).error(function(response){
-    console.log(response)
+    
   })
 
 })
