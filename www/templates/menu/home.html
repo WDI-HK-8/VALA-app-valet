@@ -22,13 +22,18 @@
           models  = "pickUpMarkers"
           coords  = "'self'"
           icon    = "'icon'"
-          click  =  "clickPin()">
+          click  =  "clickPin(this)">
           <ui-gmap-windows show="show">
             <div ng-non-bindable>
-              <h2>{{title}}</h2>
-              <p>{{name}}</p>
-              <p>{{location}}</p>
-              <p>{{car_make}}</p>
+              <h2>{{id}}</h2>
+              <p>Name: {{name}}</p>
+              <p>Phone: {{phone}}</p>
+              <p>Transmission: {{transmission}}</p>  
+              <p>Address: {{location}}</p>
+              <p>Est.distance: {{distanceEST}}</p>
+              <p>Est.time: {{timeEST}}</p>
+              <button ng-click="valetReply()">Accept</button>
+              <button ng-click="closeInfoWindow()">Busy</button>
             </div>
           </ui-gmap-windows>
         </ui-gmap-markers>
@@ -37,15 +42,20 @@
           models  = "dropOffMarkers"
           coords  = "'self'"
           icon    = "'icon'"
-          click  =  "clickPin()">
-        <ui-gmap-windows show="show">
-          <div ng-non-bindable>
-            <h2>{{title}}</h2>
-            <p>{{name}}</p>
-            <p>{{location}}</p>
-            <p>{{car_make}}</p>
-          </div>
-        </ui-gmap-windows>
+          click  =  "clickPin(this)">
+          <ui-gmap-windows show="show">
+            <div ng-non-bindable>
+              <h2>{{id}}</h2>
+              <p>Name: {{name}}</p>
+              <p>Phone: {{phone}}</p>
+              <p>Transmission: {{transmission}}</p>  
+              <p>Address: {{location}}</p>
+              <p>Est.distance: {{distanceEST}}</p>
+              <p>Est.time: {{timeEST}}</p>
+              <button>Accept</button>
+              <button>Busy</button>
+            </div>
+          </ui-gmap-windows>
         </ui-gmap-markers>
 
         <ui-gmap-polyline 
