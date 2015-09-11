@@ -25,15 +25,7 @@
           click  =  "clickPin(this)">
           <ui-gmap-windows show="show">
             <div ng-non-bindable>
-              <h2>{{id}}</h2>
-              <p>Name: {{name}}</p>
-              <p>Phone: {{phone}}</p>
-              <p>Transmission: {{transmission}}</p>  
-              <p>Address: {{location}}</p>
-              <p>Est.distance: {{distanceEST}}</p>
-              <p>Est.time: {{timeEST}}</p>
-              <button ng-click="valetReply()">Accept</button>
-              <button ng-click="closeInfoWindow()">Busy</button>
+              selected
             </div>
           </ui-gmap-windows>
         </ui-gmap-markers>
@@ -59,20 +51,60 @@
         </ui-gmap-markers>
 
         <ui-gmap-polyline 
-        ng-repeat="p in polylines" 
-        path="p.path" 
-        stroke="p.stroke" 
-        visible='p.visible'
-        geodesic='p.geodesic' 
-        fit="false" 
-        editable="p.editable" 
-        draggable="p.draggable" 
-        icons="p.icons">
-      </ui-gmap-polyline>
+          ng-repeat="p in polylines" 
+          path="p.path" 
+          stroke="p.stroke" 
+          visible='p.visible'
+          geodesic='p.geodesic' 
+          fit="false" 
+          editable="p.editable" 
+          draggable="p.draggable" 
+          icons="p.icons">
+        </ui-gmap-polyline>
 
     </ui-gmap-google-map>
      
   </ion-content>
+
+  <div class="tabs tabs-dark" style="height:auto; width:100%;">
+    <div class="list">
+      <div class="row">
+        <div class="col">
+          PICK UP NO: <br>Pick up number
+        </div>
+        <div class="col">
+          Username: <br>Pick up number
+        </div>
+        <div class="col">
+          Phone Number: <br>number
+        </div>
+        <div class="col">
+          <img src="http://placehold.it/100x100">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          Address: <br>address
+        </div>
+        <div class="col">
+          Transmission: <br>transmission
+        </div>
+        <div class="col">
+          Est. Distance<br>Pick up number
+        </div>
+        <div class="col">
+          Est. Time<br>Pick up number
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <button class="button button-block button-positive">ACCEPT</button>                         
+        </div>
+      </div>
+    </div>
+  </div>
+
    
 </ion-view>
 

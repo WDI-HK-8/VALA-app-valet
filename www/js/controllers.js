@@ -122,7 +122,7 @@ angular.module('starter.controllers', [])
         }
       };
 
-      $scope.pickUpMarkers =[];
+      $scope.tempPickUpMarkers =[];
 
       $http.get($scope.rootURL + "api/v1/requests/pickup").success(function(indexPickups){
         
@@ -144,30 +144,12 @@ angular.module('starter.controllers', [])
           var myCurLoc        = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
           var myDestination   = new google.maps.LatLng(latitude, longitude)
 
-          var matrixService   = new google.maps.DistanceMatrixService();
+          var distanceEST;
+          var timeEST;
           
-          var durationDistance = {
-            origins :       [myCurLoc],
-            destinations :  [myDestination],
-            travelMode : google.maps.TravelMode.WALKING
-          }
-            
-          matrixService.getDistanceMatrix(durationDistance, function(response, status){
-            if (status == google.maps.DistanceMatrixStatus.OK){
-
-              var originAddress = response.originAddresses
-              var destinationAddress = response.destinationAddresses
-
-              $scope.distanceEST = response.rows[0].elements[0].distance.text;
-              $scope.timeEST     = response.rows[0].elements[0].duration.text;
-              
-              // console.log(originAddress, destinationAddress, $scope.distanceEST, $scope.timeEST);
-            }
-          })
-        
-
-          $scope.pickUpMarker =  {
-            id:           "Pick Up Ticket" + id,
+          var pickUpMarker =  {
+            title:        "Pick Up Ticket",
+            id:           id,
             name:         userName,
             picture:      userPic,
             transmission: transmission, 
@@ -175,11 +157,13 @@ angular.module('starter.controllers', [])
             latitude:     latitude,
             longitude:    longitude,
             location:     address,
-            distanceEST:  $scope.distanceEST,
-            timeEST:      $scope.timeEST,
+            distanceEST:  distanceEST,
+            timeEST:      timeEST,
             icon:         'http://labs.google.com/ridefinder/images/mm_20_blue.png',
             show:         false,
             clickPin: function() {
+              $scope.currentLocation = this
+
               var directionsService = new google.maps.DirectionsService();
               var directionsDisplay = new google.maps.DirectionsRenderer();
               
@@ -221,9 +205,42 @@ angular.module('starter.controllers', [])
               });
             }
           }
+          $scope.tempPickUpMarkers.push(pickUpMarker)
+          $scope.pickUpMarkers = [];
 
-          $scope.pickUpMarkers.push($scope.pickUpMarker)
-          console.log($scope.pickUpMarker)
+
+
+          
+            var matrixService = new google.maps.DistanceMatrixService();
+
+            var durationDistance = {
+              origins:      [myCurLoc],
+              destinations: [myDestination],
+              travelMode : google.maps.TravelMode.WALKING
+            }
+            
+            matrixService.getDistanceMatrix(durationDistance, function(response, status){
+              if (status == google.maps.DistanceMatrixStatus.OK){
+
+                var distanceEST = response.rows[0].elements[0].distance.text;
+                var timeEST     = response.rows[0].elements[0].duration.text;
+
+              }
+              console.log(myCurLoc, myDestination);
+            })
+          
+
+
+          // for (var k = 0; k < $scope.tempPickUpMarkers.length; k++){
+
+          //   addTimeDistance(k,myCurLoc,myDestination)
+
+          //   $scope.pickUpMarkers.push($scope.tempPickUpMarkers[k])
+          // }
+          
+          // console.log($scope.pickUpMarkers)
+
+
 
         }
       }).error(function(indexPickups){
@@ -272,6 +289,7 @@ angular.module('starter.controllers', [])
               
               // console.log(originAddress, destinationAddress, $scope.distanceEST, $scope.timeEST);
             }
+            // console.log(myCurLoc, myDestination);
           })
         
 
