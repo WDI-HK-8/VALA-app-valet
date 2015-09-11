@@ -189,8 +189,9 @@ angular.module('starter.controllers', [])
         }
       }
 
-      var runMarker = function(indexElement){
+      var runMarker = function(indexElement, title, iconURL){
                  
+        var title           = title
         var user            = indexElement.user;
         var sourceLocation  = indexElement.source_location; 
         var id              = indexElement.id;
@@ -206,7 +207,7 @@ angular.module('starter.controllers', [])
         
         var myCurLoc        = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
         var myDestination   = new google.maps.LatLng(latitude, longitude)
-        var iconURL         = 'http://labs.google.com/ridefinder/images/mm_20_blue.png'
+        var iconURL         = iconURL
 
         var distanceEST;
         var timeEST
@@ -224,7 +225,7 @@ angular.module('starter.controllers', [])
             distanceEST = responseD.rows[0].elements[0].distance.text;
             timeEST     = responseD.rows[0].elements[0].duration.text;
 
-            createMarker("Pick Up Ticket", id, userName, userPic, transmission, userPhoneNum, latitude, longitude, address, distanceEST, timeEST, iconURL)
+            createMarker(title, id, userName, userPic, transmission, userPhoneNum, latitude, longitude, address, distanceEST, timeEST, iconURL)
 
             $scope.pickUpMarkers.push(newMarker)
           }
@@ -235,7 +236,7 @@ angular.module('starter.controllers', [])
 
       $http.get($scope.rootURL + "api/v1/requests/pickup").success(function(indexPickups){
         for (var num = 0; num < indexPickups.length; num++){
-          runMarker(indexPickups[num]);
+          runMarker(indexPickups[num],"Pick up ticket", 'http://labs.google.com/ridefinder/images/mm_20_blue.png');
         }
       }).error(function(indexPickups){
         console.log(indexPickups)
@@ -245,107 +246,8 @@ angular.module('starter.controllers', [])
       $scope.dropOffMarkers =[];
 
       $http.get($scope.rootURL + "api/v1/requests/dropoff").success(function(indexDropoffs){
-        
         for (var num = 0; num < indexDropoffs.length; num++){
-          
-          var userDropOff     = indexDropoffs[num].user;
-          var sourceLocation  = indexDropoffs[num].source_location; 
-          var id              = indexDropoffs[num].id;
-
-          var userName        = userDropOff.name;
-          var userPic         = userDropOff.profile_picture;
-          var transmission    = userDropOff.transmission;
-          var userPhoneNum    = userDropOff.phone_number;
-
-          var address         = sourceLocation.address;
-          var latitude        = sourceLocation.latitude;
-          var longitude       = sourceLocation.longitude;
-          
-          var myCurLoc        = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
-          var myDestination   = new google.maps.LatLng(latitude, longitude)
-
-          var matrixService   = new google.maps.DistanceMatrixService();
-          
-          var durationDistance = {
-            origins :       [myCurLoc],
-            destinations :  [myDestination],
-            travelMode : google.maps.TravelMode.DRIVING
-          }
-            
-          matrixService.getDistanceMatrix(durationDistance, function(response, status){
-            if (status == google.maps.DistanceMatrixStatus.OK){
-
-              var originAddress = response.originAddresses
-              var destinationAddress = response.destinationAddresses
-
-              $scope.distanceEST = response.rows[0].elements[0].distance.text;
-              $scope.timeEST     = response.rows[0].elements[0].duration.text;
-              
-              // console.log(originAddress, destinationAddress, $scope.distanceEST, $scope.timeEST);
-            }
-            // console.log(myCurLoc, myDestination);
-          })
-        
-
-          $scope.dropOffMarker =  {
-            id:           "Drop Off Ticket" + id,
-            name:         userName,
-            picture:      userPic,
-            transmission: transmission, 
-            phone:        userPhoneNum,
-            latitude:     latitude,
-            longitude:    longitude,
-            location:     address,
-            distanceEST:  $scope.distanceEST,
-            timeEST:      $scope.timeEST,
-            icon:         'http://labs.google.com/ridefinder/images/mm_20_red.png',
-            show:         false,
-            clickPin: function() {
-              var directionsService = new google.maps.DirectionsService();
-              var directionsDisplay = new google.maps.DirectionsRenderer();
-              
-              $scope.selfLocation   = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
-              $scope.destination    = new google.maps.LatLng(this.latitude, this.longitude) 
-         
-              var request = {
-                origin : $scope.selfLocation,
-                destination : $scope.destination,
-                travelMode : google.maps.TravelMode.WALKING
-              }      
-              
-              directionsService.route(request, function(response, status) {
-                if (status == google.maps.DirectionsStatus.OK) {
-                    directionsDisplay.setDirections(response);
-                
-                  $scope.path_coords = response.routes[0].overview_path
-                  $scope.polylines = [
-                    {
-                      id: 888,
-                      path: $scope.path_coords, 
-                      stroke: {
-                          color: 'red',
-                          weight: 2
-                      },
-                      editable: false,
-                      draggable: false,
-                      geodesic: false,
-                      visible: true,
-                      icons: [{
-                          icon: {
-                          },
-                          offset: '25px',
-                          repeat: '50px'
-                      }]
-                    }
-                  ];
-                }              
-              });
-            }
-          }
-
-          $scope.dropOffMarkers.push($scope.dropOffMarker)
-          console.log($scope.dropOffMarker)
-
+          runMarker(indexDropoffs[num], "Drop off ticket", 'http://labs.google.com/ridefinder/images/mm_20_red.png')
         }
       }).error(function(indexDropoffs){
         console.log(indexDropoffs)
