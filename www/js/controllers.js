@@ -123,18 +123,82 @@ angular.module('starter.controllers', [])
       };
 
       $scope.pickUpMarkers =[];
+      var newMarker = {};
 
+      var createDirectionsService = function(originLoc, destinationLoc){
+        var directionsService = new google.maps.DirectionsService();
+        var directionsDisplay = new google.maps.DirectionsRenderer();
 
-      var runMarker = function(indexPickup){
+        var request = {
+          origin : originLoc,
+          destination : destinationLoc,
+          travelMode : google.maps.TravelMode.WALKING
+        }      
+                
+        directionsService.route(request, function(response, status) {
+          if (status == google.maps.DirectionsStatus.OK) {
+              directionsDisplay.setDirections(response);
+          
+            $scope.path_coords = response.routes[0].overview_path
+            $scope.polylines = [
+              {
+                id: 888,
+                path: $scope.path_coords, 
+                stroke: {
+                    color: 'blue',
+                    weight: 2
+                },
+                editable: false,
+                draggable: false,
+                geodesic: false,
+                visible: true,
+                icons: [{
+                    icon: {
+                    },
+                    offset: '25px',
+                    repeat: '50px'
+                }]
+              }
+            ];
+          }              
+        });
+      }
+
+      var createMarker = function(title, id, userName, userPic, transmission, userPhoneNum, latitude, longitude, address, distanceEST, timeEST, icon){
+        newMarker =  {
+          title:        title,
+          id:           id,
+          name:         userName,
+          picture:      userPic,
+          transmission: transmission, 
+          phone:        userPhoneNum,
+          latitude:     latitude,
+          longitude:    longitude,
+          location:     address,
+          distanceEST:  distanceEST,
+          timeEST:      timeEST,
+          icon:         icon,
+          show:         false,
+          clickPin: function() {
+            $scope.currentLocation = this       
+            $scope.selfLocation   = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
+            $scope.destination    = new google.maps.LatLng(this.latitude, this.longitude) 
+            
+            createDirectionsService($scope.selfLocation, $scope.destination)
+          }
+        }
+      }
+
+      var runMarker = function(indexElement){
                  
-        var userPickUp      = indexPickup.user;
-        var sourceLocation  = indexPickup.source_location; 
-        var id              = indexPickup.id;
+        var user            = indexElement.user;
+        var sourceLocation  = indexElement.source_location; 
+        var id              = indexElement.id;
 
-        var userName        = userPickUp.name;
-        var userPic         = userPickUp.profile_picture;
-        var transmission    = userPickUp.transmission;
-        var userPhoneNum    = userPickUp.phone_number;
+        var userName        = user.name;
+        var userPic         = user.profile_picture;
+        var transmission    = user.transmission;
+        var userPhoneNum    = user.phone_number;
 
         var address         = sourceLocation.address;
         var latitude        = sourceLocation.latitude;
@@ -142,90 +206,36 @@ angular.module('starter.controllers', [])
         
         var myCurLoc        = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
         var myDestination   = new google.maps.LatLng(latitude, longitude)
+        var iconURL         = 'http://labs.google.com/ridefinder/images/mm_20_blue.png'
+
+        var distanceEST;
+        var timeEST
 
         var matrixService   = new google.maps.DistanceMatrixService();
-
+        
         var durationDistance = {
           origins:      [myCurLoc],
           destinations: [myDestination],
           travelMode : google.maps.TravelMode.WALKING
         }
-        
-        
+         
         matrixService.getDistanceMatrix(durationDistance, function(responseD, status){
           if (status == google.maps.DistanceMatrixStatus.OK){
+            distanceEST = responseD.rows[0].elements[0].distance.text;
+            timeEST     = responseD.rows[0].elements[0].duration.text;
 
-            var pickUpMarker =  {
-              title:        "Pick Up Ticket",
-              id:           id,
-              name:         userName,
-              picture:      userPic,
-              transmission: transmission, 
-              phone:        userPhoneNum,
-              latitude:     latitude,
-              longitude:    longitude,
-              location:     address,
-              distanceEST:  responseD.rows[0].elements[0].distance.text,
-              timeEST:      responseD.rows[0].elements[0].duration.text,
-              icon:         'http://labs.google.com/ridefinder/images/mm_20_blue.png',
-              show:         false,
-              clickPin: function() {
-                $scope.currentLocation = this
+            createMarker("Pick Up Ticket", id, userName, userPic, transmission, userPhoneNum, latitude, longitude, address, distanceEST, timeEST, iconURL)
 
-                var directionsService = new google.maps.DirectionsService();
-                var directionsDisplay = new google.maps.DirectionsRenderer();
-                
-                $scope.selfLocation   = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
-                $scope.destination    = new google.maps.LatLng(this.latitude, this.longitude) 
-           
-                var request = {
-                  origin : $scope.selfLocation,
-                  destination : $scope.destination,
-                  travelMode : google.maps.TravelMode.DRIVING
-                }      
-                
-                directionsService.route(request, function(response, status) {
-                  if (status == google.maps.DirectionsStatus.OK) {
-                      directionsDisplay.setDirections(response);
-                  
-                    $scope.path_coords = response.routes[0].overview_path
-                    $scope.polylines = [
-                      {
-                        id: 888,
-                        path: $scope.path_coords, 
-                        stroke: {
-                            color: 'blue',
-                            weight: 2
-                        },
-                        editable: false,
-                        draggable: false,
-                        geodesic: false,
-                        visible: true,
-                        icons: [{
-                            icon: {
-                            },
-                            offset: '25px',
-                            repeat: '50px'
-                        }]
-                      }
-                    ];
-                  }              
-                });
-              }
-            }
-            $scope.pickUpMarkers.push(pickUpMarker)
+            $scope.pickUpMarkers.push(newMarker)
           }
         console.log($scope.pickUpMarkers)
         })
-       
       }
 
 
       $http.get($scope.rootURL + "api/v1/requests/pickup").success(function(indexPickups){
         for (var num = 0; num < indexPickups.length; num++){
-
           runMarker(indexPickups[num]);
- 
         }
       }).error(function(indexPickups){
         console.log(indexPickups)
