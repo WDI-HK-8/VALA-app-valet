@@ -22,13 +22,10 @@
           models  = "pickUpMarkers"
           coords  = "'self'"
           icon    = "'icon'"
-          click  =  "clickPin">
+          click  =  "clickPin(this)">
           <ui-gmap-windows show="show">
             <div ng-non-bindable>
-              <h2>{{title}}</h2>
-              <p>{{name}}</p>
-              <p>{{location}}</p>
-              <p>{{car_make}}</p>
+              selected
             </div>
           </ui-gmap-windows>
         </ui-gmap-markers>
@@ -37,20 +34,64 @@
           models  = "dropOffMarkers"
           coords  = "'self'"
           icon    = "'icon'"
-          click  =  "clickPin">
-        <ui-gmap-windows show="show">
-          <div ng-non-bindable>
-            <h2>{{title}}</h2>
-            <p>{{name}}</p>
-            <p>{{location}}</p>
-            <p>{{car_make}}</p>
-          </div>
-        </ui-gmap-windows>
+          click  =  "clickPin(this)">
+          <ui-gmap-windows show="show">
+            <div ng-non-bindable>
+              <h2>{{id}}</h2>
+              <p>Name: {{name}}</p>
+              <p>Phone: {{phone}}</p>
+              <p>Transmission: {{transmission}}</p>  
+              <p>Address: {{location}}</p>
+              <p>Est.distance: {{distanceEST}}</p>
+              <p>Est.time: {{timeEST}}</p>
+              <button>Accept</button>
+              <button>Busy</button>
+            </div>
+          </ui-gmap-windows>
         </ui-gmap-markers>
 
+        <ui-gmap-polyline 
+          ng-repeat="p in polylines" 
+          path="p.path" 
+          stroke="p.stroke" 
+          visible='p.visible'
+          geodesic='p.geodesic' 
+          fit="false" 
+          editable="p.editable" 
+          draggable="p.draggable" 
+          icons="p.icons">
+        </ui-gmap-polyline>
+
     </ui-gmap-google-map>
-     
+
+
   </ion-content>
+  
+<!-- card show -->
+  <div style="position: absolute; bottom: 0px; width: 100%">
+    <div class="card" id="currentLocation" ng-cloak ng-show="currentLocation">
+      <div class="item item-divider" >
+        {{currentLocation.title}} : {{currentLocation.id}}
+      </div>
+      <div class="item item-text-wrap">
+        Client: {{currentLocation.name}}<br>
+        Transmission: {{currentLocation.transmission}}<br>
+        Phone: {{currentLocation.phone}}<br>
+        Address: {{currentLocation.location}}<br>
+        EST.distance / time: {{currentLocation.distanceEST}} / {{currentLocation.timeEST}}
+      </div>
+      <button class="button button-small button-assertive buttonDetail" ng-click="currentLocation = false">BUSY</button>
+      <button class="button button-small button-calm buttonDetail"ng-click="valetReply()" >ACCEPT</button>
+    </div>
+  </div>
+  
+
+    
+
+
+
+  
+
    
 </ion-view>
 

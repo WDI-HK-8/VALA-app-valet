@@ -2,3 +2,15 @@
 .angular-google-map-container { 
   height: 700px; 
 }
+
+.tabs .row {
+  margin-top: -5px;
+  margin-bottom: -10px;
+}
+
+.buttonDetail {
+  float: right;
+  margin: 10px; 
+  width: 100px;
+  font-style: bold;
+}

@@ -75,7 +75,6 @@ angular.module('starter.controllers', [])
 .controller('ProfileCtrl', function($scope, $http){
 
   var valetID = $scope.currentUser.id
-  console.log(valetID)
   var url = $scope.rootURL + "api/v1/valets/" + valetID
   
   $http.get(url).success(function(response){
@@ -87,7 +86,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi){
+.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $ionicModal){
   nemSimpleLogger.doLog = true; //default is true
   nemSimpleLogger.currentLevel = nemSimpleLogger.LEVELS.debug
 
@@ -107,7 +106,7 @@ angular.module('starter.controllers', [])
           latitude: $scope.myLocation.lat,
           longitude: $scope.myLocation.lng
         },
-        zoom: 18,
+        zoom: 15,
         pan: 2
       };
 
@@ -123,73 +122,156 @@ angular.module('starter.controllers', [])
         }
       };
 
-      $scope.pickUpMarkers =[
-        {
-          id: "a",
-          title: "abc",
-          latitude: $scope.myLocation.lat+0.002,
-          longitude: $scope.myLocation.lng+0.002,
-          location: "fasfdasf",
-          car_make: "safdsfda",
-          name: "asdfsd",
-          icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png',
-          show: false,
-          clickPin: function(){  
-          }
-        },
-        {
-          id: "b",
-          title: "bde", 
-          latitude: $scope.myLocation.lat+0.001,
-          longitude: $scope.myLocation.lng+0.001,
-          location: "fasfdasf",
-          car_make: "safdsfda",
-          name: "asdfsd",
-          icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png',
-          show: false,
-          clickPin: function(){
+      $scope.pickUpMarkers =[];
+      var newMarker = {};
+
+      var createDirectionsService = function(originLoc, destinationLoc){
+        var directionsService = new google.maps.DirectionsService();
+        var directionsDisplay = new google.maps.DirectionsRenderer();
+
+        var request = {
+          origin : originLoc,
+          destination : destinationLoc,
+          travelMode : google.maps.TravelMode.WALKING
+        }      
+                
+        directionsService.route(request, function(response, status) {
+          if (status == google.maps.DirectionsStatus.OK) {
+              directionsDisplay.setDirections(response);
+          
+            $scope.path_coords = response.routes[0].overview_path
+            $scope.polylines = [
+              {
+                id: 888,
+                path: $scope.path_coords, 
+                stroke: {
+                    color: 'blue',
+                    weight: 2
+                },
+                editable: false,
+                draggable: false,
+                geodesic: false,
+                visible: true,
+                icons: [{
+                    icon: {
+                    },
+                    offset: '25px',
+                    repeat: '50px'
+                }]
+              }
+            ];
+          }              
+        });
+      }
+
+      var createMarker = function(title, id, userName, userPic, transmission, userPhoneNum, latitude, longitude, address, distanceEST, timeEST, icon){
+        newMarker =  {
+          title:        title,
+          id:           id,
+          name:         userName,
+          picture:      userPic,
+          transmission: transmission, 
+          phone:        userPhoneNum,
+          latitude:     latitude,
+          longitude:    longitude,
+          location:     address,
+          distanceEST:  distanceEST,
+          timeEST:      timeEST,
+          icon:         icon,
+          show:         false,
+          clickPin: function() {
+            $scope.currentLocation = this
+            console.log(this)       
+            $scope.selfLocation   = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
+            $scope.destination    = new google.maps.LatLng(this.latitude, this.longitude) 
+            
+            createDirectionsService($scope.selfLocation, $scope.destination)
           }
         }
-      ]
+      }
 
-      $scope.dropOffMarkers =[
-        {
-          id: "a",
-          title: "abc",
-          latitude: $scope.myLocation.lat+0.0002,
-          longitude: $scope.myLocation.lng+0.0002,
-          location: "fasfdasf",
-          car_make: "safdsfda",
-          name: "asdfsd",
-          icon: 'http://labs.google.com/ridefinder/images/mm_20_red.png',
-          show: false,
-          clickPin: function(){  
-          }
-        },
-        {
-          id: "b",
-          title: "bde", 
-          latitude: $scope.myLocation.lat+0.0001,
-          longitude: $scope.myLocation.lng+0.0001,
-          location: "fasfdasf",
-          car_make: "safdsfda",
-          name: "asdfsd",
-          icon: 'http://labs.google.com/ridefinder/images/mm_20_red.png',
-          show: false,
-          clickPin: function(){
-          }
+      var runMarker = function(indexElement, title, iconURL){
+                 
+        var title           = title
+        var user            = indexElement.user;
+        var sourceLocation  = indexElement.source_location; 
+        var id              = indexElement.id;
+
+        var userName        = user.name;
+        var userPic         = user.profile_picture;
+        var transmission    = user.transmission;
+        var userPhoneNum    = user.phone_number;
+
+        var address         = sourceLocation.address;
+        var latitude        = sourceLocation.latitude;
+        var longitude       = sourceLocation.longitude;
+        
+        var myCurLoc        = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
+        var myDestination   = new google.maps.LatLng(latitude, longitude)
+        var iconURL         = iconURL
+
+        var distanceEST;
+        var timeEST
+
+        var matrixService   = new google.maps.DistanceMatrixService();
+        
+        var durationDistance = {
+          origins:      [myCurLoc],
+          destinations: [myDestination],
+          travelMode : google.maps.TravelMode.WALKING
         }
-      ]
+         
+        matrixService.getDistanceMatrix(durationDistance, function(responseD, status){
+          if (status == google.maps.DistanceMatrixStatus.OK){
+            distanceEST = responseD.rows[0].elements[0].distance.text;
+            timeEST     = responseD.rows[0].elements[0].duration.text;
 
-      
-      console.log($scope.locationMarkers)
+            createMarker(title, id, userName, userPic, transmission, userPhoneNum, latitude, longitude, address, distanceEST, timeEST, iconURL)
+
+            $scope.pickUpMarkers.push(newMarker)
+          }
+        console.log($scope.pickUpMarkers)
+        })
+      }
+
+
+      $http.get($scope.rootURL + "api/v1/requests/pickup").success(function(indexPickups){
+        for (var num = 0; num < indexPickups.length; num++){
+          runMarker(indexPickups[num],"Pick up ticket", 'http://labs.google.com/ridefinder/images/mm_20_blue.png');
+        }
+      }).error(function(indexPickups){
+        console.log(indexPickups)
+      })
+
+
+      $scope.dropOffMarkers =[];
+
+      $http.get($scope.rootURL + "api/v1/requests/dropoff").success(function(indexDropoffs){
+        for (var num = 0; num < indexDropoffs.length; num++){
+          runMarker(indexDropoffs[num], "Drop off ticket", 'http://labs.google.com/ridefinder/images/mm_20_red.png')
+        }
+      }).error(function(indexDropoffs){
+        console.log(indexDropoffs)
+      })
 
     });
   }
 
-
-
   navigator.geolocation.getCurrentPosition($scope.drawSelfMap); 
   
+
+  $scope.valetReply = function(){
+    var valetID = $scope.currentUser.id;
+    var requestID = this.currentLocation.id
+    var url = $scope.rootURL + "api/v1/valets/" + valetID + "/requests/" + requestID + "/valet_pick_up"
+
+    $http.patch(url).success(function(response){
+      console.log(response)
+      
+    }).error(function(response){
+      console.log(response)
+    })
+  }
+
 
 })
