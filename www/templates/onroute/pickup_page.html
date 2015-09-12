@@ -21,6 +21,7 @@
           coords="targetMarker.coords" 
           options="targetMarker.options" 
           events="targetMarker.events" 
+          click = "createDirectionsService(this)"
           idkey="1" >
         </ui-gmap-marker>
 
@@ -28,23 +29,38 @@
           coords="targetCarPark.coords" 
           options="targetCarPark.options" 
           events="targetCarPark.events" 
+          click = "createDirectionsService(this)"
           idkey="2" >
         </ui-gmap-marker>
 
-
-        <!-- 
         <ui-gmap-polyline 
           ng-repeat="p in polylines" 
           path="p.path" 
           stroke="p.stroke" 
           visible='p.visible'
-          geodesic='p.geodesic' 
+          geodesic='p.geodesic'
+          static="true" 
           fit="false" 
           editable="p.editable" 
           draggable="p.draggable" 
           icons="p.icons">
         </ui-gmap-polyline>
- -->
+
+        <ui-gmap-polyline 
+          ng-repeat="p in polylines_park" 
+          path="p.path" 
+          stroke="p.stroke" 
+          visible='p.visible'
+          geodesic='p.geodesic'
+          static="true" 
+          fit="false" 
+          editable="p.editable" 
+          draggable="p.draggable" 
+          icons="p.icons">
+        </ui-gmap-polyline>
+
+        
+
     </ui-gmap-google-map>
 
 

@@ -316,9 +316,6 @@ angular.module('starter.controllers', [])
         }
       };
 
-
-
-
       var createTarget = function(targetLat, targetLng, iconURL){
         tempTarget = {
           id: "Target",
@@ -338,24 +335,101 @@ angular.module('starter.controllers', [])
         }
       }
 
+      var createDirectionsService = function(destination, originLoc, destinationLoc){
+        var directionsService = new google.maps.DirectionsService();
+        var directionsDisplay = new google.maps.DirectionsRenderer();
+
+        if(destination == "carpark"){
+          var request = {
+            origin : originLoc,
+            destination : destinationLoc,
+            travelMode : google.maps.TravelMode.DRIVING
+          }
+
+          directionsService.route(request, function(response, status) {
+          if (status == google.maps.DirectionsStatus.OK) {
+              directionsDisplay.setDirections(response);
+          console.log(response)
+            $scope.path_coords = response.routes[0].overview_path
+            $scope.polylines_park = [
+              {
+                id: 888,
+                path: $scope.path_coords, 
+                stroke: {
+                    color: 'green',
+                    weight: 2
+                },
+                editable: false,
+                draggable: false,
+                geodesic: false,
+                visible: true,
+                icons: [{
+                    icon: {
+                    },
+                    offset: '25px',
+                    repeat: '50px'
+                }]
+              }
+            ];
+          }              
+        });
+
+        } else {
+          var request = {
+            origin : originLoc,
+            destination : destinationLoc,
+            travelMode : google.maps.TravelMode.WALKING
+          }
+          directionsService.route(request, function(response, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+                directionsDisplay.setDirections(response);
+            console.log(response)
+              $scope.path_coords = response.routes[0].overview_path
+              $scope.polylines = [
+                {
+                  id: 999,
+                  path: $scope.path_coords, 
+                  stroke: {
+                      color: 'blue',
+                      weight: 2
+                  },
+                  editable: false,
+                  draggable: false,
+                  geodesic: false,
+                  visible: true,
+                  icons: [{
+                      icon: {
+                      },
+                      offset: '25px',
+                      repeat: '50px'
+                  }]
+                }
+              ];
+            }              
+          });
+        }
+      }
+
 
       $rootScope.$on('userDetail', function(event, data){
         
         var targetLat = data.source_location.latitude 
         var targetLng = data.source_location.longitude 
+        var selfLocation   = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
+        
+        var targetDestination = new google.maps.LatLng(targetLat, targetLng) 
 
-        var targetCarParkLat = data.parking_location.latitude
-        var targetCarParkLng = data.parking_location.longitude
+        var targetCarParkLat  = data.parking_location.latitude
+        var targetCarParkLng  = data.parking_location.longitude
+
+        var carParkDestination = new google.maps.LatLng(targetCarParkLat, targetCarParkLng) 
+
 
         createTarget(targetLat, targetLng, 'img/blue-dot.png')
-        createTarget(targetCarParkLat, targetCarParkLng, 'img/parkinglot.png')
+        createDirectionsService("client", selfLocation, targetDestination)
         
-
-        console.log($scope.targetMarker)
-        console.log(targetCarParkLng)
-        console.log(targetCarParkLat)
-        console.log($scope.targetCarPark)
-
+        createTarget(targetCarParkLat, targetCarParkLng, 'img/parkinglot.png')
+        createDirectionsService("carpark", targetDestination, carParkDestination)
         
       })
 
