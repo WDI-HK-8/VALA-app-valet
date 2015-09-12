@@ -413,6 +413,9 @@ angular.module('starter.controllers', [])
 
       $rootScope.$on('userDetail', function(event, data){
         
+        $scope.userDetail = data
+        console.log($scope.userDetail)
+
         var targetLat = data.source_location.latitude 
         var targetLng = data.source_location.longitude 
         var selfLocation   = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
