@@ -335,6 +335,54 @@ angular.module('starter.controllers', [])
         }
       }
 
+
+      var pathSpecificationCarPark = function(id, path, color){
+        $scope.polylines_park = [
+          {
+            id: id,
+            path: path, 
+            stroke: {
+                color: color,
+                weight: 2
+            },
+            editable: false,
+            draggable: false,
+            geodesic: false,
+            visible: true,
+            icons: [{
+                icon: {
+                },
+                offset: '25px',
+                repeat: '50px'
+            }]
+          }
+        ];
+      }
+
+      var pathSpecificationTarget = function(id, path, color){
+        $scope.polylines = [
+          {
+            id: id,
+            path: path, 
+            stroke: {
+                color: color,
+                weight: 2
+            },
+            editable: false,
+            draggable: false,
+            geodesic: false,
+            visible: true,
+            icons: [{
+                icon: {
+                },
+                offset: '25px',
+                repeat: '50px'
+            }]
+          }
+        ];
+      }
+
+
       var createDirectionsService = function(destination, originLoc, destinationLoc){
         var directionsService = new google.maps.DirectionsService();
         var directionsDisplay = new google.maps.DirectionsRenderer();
@@ -349,28 +397,9 @@ angular.module('starter.controllers', [])
           directionsService.route(request, function(response, status) {
           if (status == google.maps.DirectionsStatus.OK) {
               directionsDisplay.setDirections(response);
-          console.log(response)
-            $scope.path_coords = response.routes[0].overview_path
-            $scope.polylines_park = [
-              {
-                id: 888,
-                path: $scope.path_coords, 
-                stroke: {
-                    color: 'green',
-                    weight: 2
-                },
-                editable: false,
-                draggable: false,
-                geodesic: false,
-                visible: true,
-                icons: [{
-                    icon: {
-                    },
-                    offset: '25px',
-                    repeat: '50px'
-                }]
-              }
-            ];
+              $scope.path_coords = response.routes[0].overview_path
+
+            pathSpecificationCarPark(888, $scope.path_coords, 'green')
           }              
         });
 
@@ -385,26 +414,8 @@ angular.module('starter.controllers', [])
                 directionsDisplay.setDirections(response);
             console.log(response)
               $scope.path_coords = response.routes[0].overview_path
-              $scope.polylines = [
-                {
-                  id: 999,
-                  path: $scope.path_coords, 
-                  stroke: {
-                      color: 'blue',
-                      weight: 2
-                  },
-                  editable: false,
-                  draggable: false,
-                  geodesic: false,
-                  visible: true,
-                  icons: [{
-                      icon: {
-                      },
-                      offset: '25px',
-                      repeat: '50px'
-                  }]
-                }
-              ];
+              pathSpecificationTarget(999, $scope.path_coords, 'blue')
+              
             }              
           });
         }
@@ -435,18 +446,6 @@ angular.module('starter.controllers', [])
         createDirectionsService("carpark", targetDestination, carParkDestination)
         
       })
-
-
-
-
-      
-
-
-
-
-
-
-  
 
     })
 
