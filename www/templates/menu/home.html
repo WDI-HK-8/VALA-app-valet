@@ -63,47 +63,34 @@
         </ui-gmap-polyline>
 
     </ui-gmap-google-map>
-     
+
+
   </ion-content>
-
-  <div class="tabs tabs-dark" style="height:auto; width:100%;">
-    <div class="list">
-      <div class="row">
-        <div class="col">
-          PICK UP NO: <br>Pick up number
-        </div>
-        <div class="col">
-          Username: <br>Pick up number
-        </div>
-        <div class="col">
-          Phone Number: <br>number
-        </div>
-        <div class="col">
-          <img src="http://placehold.it/100x100">
-        </div>
+  
+<!-- card show -->
+  <div style="position: absolute; bottom: 0px; width: 100%">
+    <div class="card" id="currentLocation" ng-cloak ng-show="currentLocation">
+      <div class="item item-divider" >
+        {{currentLocation.title}} : {{currentLocation.id}}
       </div>
-
-      <div class="row">
-        <div class="col">
-          Address: <br>address
-        </div>
-        <div class="col">
-          Transmission: <br>transmission
-        </div>
-        <div class="col">
-          Est. Distance<br>Pick up number
-        </div>
-        <div class="col">
-          Est. Time<br>Pick up number
-        </div>
+      <div class="item item-text-wrap">
+        Client: {{currentLocation.name}}<br>
+        Transmission: {{currentLocation.transmission}}<br>
+        Phone: {{currentLocation.phone}}<br>
+        Address: {{currentLocation.location}}<br>
+        EST.distance / time: {{currentLocation.distanceEST}} / {{currentLocation.timeEST}}
       </div>
-      <div class="row">
-        <div class="col">
-          <button class="button button-block button-positive">ACCEPT</button>                         
-        </div>
-      </div>
+      <button class="button button-small button-assertive buttonDetail" ng-click="currentLocation = false">BUSY</button>
+      <button class="button button-small button-calm buttonDetail"ng-click="valetReply()" >ACCEPT</button>
     </div>
   </div>
+  
+
+    
+
+
+
+  
 
    
 </ion-view>

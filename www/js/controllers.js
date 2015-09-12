@@ -86,7 +86,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi){
+.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $ionicModal){
   nemSimpleLogger.doLog = true; //default is true
   nemSimpleLogger.currentLevel = nemSimpleLogger.LEVELS.debug
 
@@ -180,7 +180,8 @@ angular.module('starter.controllers', [])
           icon:         icon,
           show:         false,
           clickPin: function() {
-            $scope.currentLocation = this       
+            $scope.currentLocation = this
+            console.log(this)       
             $scope.selfLocation   = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
             $scope.destination    = new google.maps.LatLng(this.latitude, this.longitude) 
             
@@ -253,29 +254,23 @@ angular.module('starter.controllers', [])
         console.log(indexDropoffs)
       })
 
-
-        
     });
   }
 
   navigator.geolocation.getCurrentPosition($scope.drawSelfMap); 
   
+
   $scope.valetReply = function(){
-    console.log("hello")
     var valetID = $scope.currentUser.id;
-    var requestID = this.id
+    var requestID = this.currentLocation.id
     var url = $scope.rootURL + "api/v1/valets/" + valetID + "/requests/" + requestID + "/valet_pick_up"
-    console.log(requestID)
 
     $http.patch(url).success(function(response){
       console.log(response)
+      
     }).error(function(response){
       console.log(response)
     })
-  }
-
-  $scope.closeInfoWindow = function(){
-    infowindow.close();
   }
 
 
