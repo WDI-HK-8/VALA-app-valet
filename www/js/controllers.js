@@ -1,8 +1,12 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $auth, $ionicPopup, $window, $log, $state, $http) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $auth, $ionicPopup, $window, $log, $state, $http, $rootScope) {
 
-  $scope.rootURL = "http://localhost:3000/"  
+  $scope.rootURL = "http://localhost:3000/"
+  $scope.$on('pushChangesToAllNodes', function( event, message ){
+    $scope.$broadcast( message.name, message.data );
+  });  
+
 
   var validateUser = function(){
     $scope.currentUser = JSON.parse($window.localStorage.getItem('current-user'))
@@ -86,7 +90,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $ionicModal){
+.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $ionicModal, $state, $rootScope){
   nemSimpleLogger.doLog = true; //default is true
   nemSimpleLogger.currentLevel = nemSimpleLogger.LEVELS.debug
 
@@ -237,7 +241,7 @@ angular.module('starter.controllers', [])
 
       $http.get($scope.rootURL + "api/v1/requests/pickup").success(function(indexPickups){
         for (var num = 0; num < indexPickups.length; num++){
-          runMarker(indexPickups[num],"Pick up ticket", 'http://labs.google.com/ridefinder/images/mm_20_blue.png');
+          runMarker(indexPickups[num],"Pick up ticket", 'img/blue-dot.png');
         }
       }).error(function(indexPickups){
         console.log(indexPickups)
@@ -248,7 +252,7 @@ angular.module('starter.controllers', [])
 
       $http.get($scope.rootURL + "api/v1/requests/dropoff").success(function(indexDropoffs){
         for (var num = 0; num < indexDropoffs.length; num++){
-          runMarker(indexDropoffs[num], "Drop off ticket", 'http://labs.google.com/ridefinder/images/mm_20_red.png')
+          runMarker(indexDropoffs[num], "Drop off ticket", 'img/red-dot.png')
         }
       }).error(function(indexDropoffs){
         console.log(indexDropoffs)
@@ -266,12 +270,110 @@ angular.module('starter.controllers', [])
     var url = $scope.rootURL + "api/v1/valets/" + valetID + "/requests/" + requestID + "/valet_pick_up"
 
     $http.patch(url).success(function(response){
-      console.log(response)
-      
+      console.log(response);
+      $state.go('app.pickup');
+      $rootScope.$emit('userDetail', response);
+
     }).error(function(response){
       console.log(response)
     })
   }
+})
 
+.controller('OnRoutePickUpCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $timeout, $rootScope){
+  nemSimpleLogger.doLog = true; //default is true
+  nemSimpleLogger.currentLevel = nemSimpleLogger.LEVELS.debug
+
+  $scope.myLocation = {
+    lng : '',
+    lat: ''
+  }
+
+  $scope.pickUpMap = function(position){
+
+    $scope.$apply(function() {
+      $scope.myLocation.lng = position.coords.longitude;
+      $scope.myLocation.lat = position.coords.latitude;
+ 
+      $scope.map = {
+        center: {
+          latitude: $scope.myLocation.lat,
+          longitude: $scope.myLocation.lng
+        },
+        zoom: 15,
+        pan: 2
+      };
+
+      $scope.marker = {
+        id: "you",
+        coords: {
+          latitude: $scope.myLocation.lat,
+          longitude: $scope.myLocation.lng
+        },
+        options: {
+            animation: google.maps.Animation.BOUNCE,
+            icon: 'img/man.png'            
+        }
+      };
+
+
+
+
+      var createTarget = function(targetLat, targetLng, iconURL){
+        tempTarget = {
+          id: "Target",
+          coords: {
+            latitude: targetLat,
+            longitude: targetLng
+          },
+          options: {
+            animation: google.maps.Animation.DROP,
+            icon: iconURL            
+          }
+        };
+        if(tempTarget.options.icon =='img/blue-dot.png'){
+          $scope.targetMarker = tempTarget 
+        } else{
+          $scope.targetCarPark = tempTarget
+        }
+      }
+
+
+      $rootScope.$on('userDetail', function(event, data){
+        
+        var targetLat = data.source_location.latitude 
+        var targetLng = data.source_location.longitude 
+
+        var targetCarParkLat = data.parking_location.latitude
+        var targetCarParkLng = data.parking_location.longitude
+
+        createTarget(targetLat, targetLng, 'img/blue-dot.png')
+        createTarget(targetCarParkLat, targetCarParkLng, 'img/parkinglot.png')
+        
+
+        console.log($scope.targetMarker)
+        console.log(targetCarParkLng)
+        console.log(targetCarParkLat)
+        console.log($scope.targetCarPark)
+
+        
+      })
+
+
+
+
+      
+
+
+
+
+
+
+  
+
+    })
+
+  }
+  navigator.geolocation.getCurrentPosition($scope.pickUpMap); 
 
 })
