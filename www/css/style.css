@@ -14,3 +14,40 @@
   width: 100px;
   font-style: bold;
 }
+
+.userDetails p {
+  margin-top: -25px;
+  margin-left: 10px;
+  position: absolute;
+  display: block;
+  
+}
+.userDetails img {
+  margin-left: 280px;
+  position: absolute;
+  display: block;
+}
+
+.userDetails {
+  height: 160px;
+  width: 280px;
+}
+
+.bayNumberSubmit{
+  height: 60px;
+}
+
+.bayNumberSubmit span  {
+  font-family: 'Helvetica Neue', Roboto, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  font-color: rgb(102,102,102);
+}
+
+.bayNumberSubmit label  {
+  width: 250px;
+  height: 30px;
+}
+
+.bayNumberSubmit button{
+  margin-top: -50px;
+}

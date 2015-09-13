@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'ng-token-auth', 'uiGmapgoogle-maps', 'nemLogging'])
+var app = angular.module('starter', ['ionic', 'starter.controllers', 'ng-token-auth', 'uiGmapgoogle-maps', 'nemLogging'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -59,6 +59,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ng-token-auth', 'uiG
     }
   })
 
+  .state('app.profile', {
+      url: '/profile',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/menu/profile.html',
+          controller: 'ProfileCtrl'
+        }
+      }
+  })
+
   .state('app.home', {
     url: '/home',
     views: {
@@ -69,15 +79,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ng-token-auth', 'uiG
     }
   })
 
-  .state('app.profile', {
-      url: '/profile',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/menu/profile.html',
-          controller: 'ProfileCtrl'
-        }
+  .state('app.pickup', { 
+    url: '/pickup',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/onroute/pickup_page.html',
+        controller: 'OnRoutePickUpCtrl'
       }
+    }
   })
+
     .state('app.support', {
       url: '/support',
       views: {
@@ -85,27 +96,19 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ng-token-auth', 'uiG
           templateUrl: 'templates/menu/support.html'
         }
       }
-  })
+  });
 
   // Valet response to pickup
-  .state('app.pickup', { 
-    url: '/pickup',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/notification/pickup_page.html'
-      }
-    }
-  })
 
   // Valet response to dropoff
-  .state('app.dropoff', { 
-    url: '/dropoff',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/notification/dropoff_page.html'
-      }
-    }
-  });
+  // .state('app.dropoff', { 
+  //   url: '/dropoff',
+  //   views: {
+  //     'menuContent': {
+  //       templateUrl: 'templates/notification/dropoff_page.html'
+  //     }
+  //   }
+  // });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/landing');
 
