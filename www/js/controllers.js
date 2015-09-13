@@ -91,11 +91,11 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $ionicModal, $state, $rootScope, PrivatePubServices){
+.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $state, $rootScope, PrivatePubServices){
   nemSimpleLogger.doLog = true; //default is true
   nemSimpleLogger.currentLevel = nemSimpleLogger.LEVELS.debug
 
-  $scope.validateUser();
+  
   $scope.myLocation = {
     lng : '',
     lat: ''
@@ -107,6 +107,7 @@ angular.module('starter.controllers', [])
   $scope.drawSelfMap = function(position) { 
     //$scope.$apply is needed to trigger the digest cycle when the geolocation arrives and to update all the watchers
     $scope.$apply(function() {
+      $scope.validateUser();
       $scope.myLocation.lng = position.coords.longitude;
       $scope.myLocation.lat = position.coords.latitude;
  
@@ -479,10 +480,9 @@ angular.module('starter.controllers', [])
 
     });
   }
-
-
   navigator.geolocation.getCurrentPosition($scope.drawSelfMap);
   
+
 
   $scope.valetReply = function(){
     var valetID = $scope.currentUser.id;
@@ -490,9 +490,9 @@ angular.module('starter.controllers', [])
     var url = $scope.rootURL + "api/v1/valets/" + valetID + "/requests/" + requestID + "/valet_pick_up"
 
     $http.patch(url).success(function(response){
+      $rootScope.$emit('userDetail', response);
       console.log(response);
       $state.go('app.pickup');
-      $rootScope.$emit('userDetail', response);
 
     }).error(function(response){
       console.log(response)
@@ -500,7 +500,7 @@ angular.module('starter.controllers', [])
   }
 })
 
-.controller('OnRoutePickUpCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $timeout, $rootScope, $state){
+.controller('OnRoutePickUpCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $rootScope, $state, PrivatePubServices){
   nemSimpleLogger.doLog = true; //default is true
   nemSimpleLogger.currentLevel = nemSimpleLogger.LEVELS.debug
 
@@ -513,30 +513,7 @@ angular.module('starter.controllers', [])
   $scope.pickUpMap = function(position){
 
     $scope.$apply(function() {
-      $scope.myLocation.lng = position.coords.longitude;
-      $scope.myLocation.lat = position.coords.latitude;
- 
-      $scope.map = {
-        center: {
-          latitude: $scope.myLocation.lat,
-          longitude: $scope.myLocation.lng
-        },
-        zoom: 15,
-        pan: 2
-      };
-
-      $scope.marker = {
-        id: "you",
-        coords: {
-          latitude: $scope.myLocation.lat,
-          longitude: $scope.myLocation.lng
-        },
-        options: {
-            animation: google.maps.Animation.BOUNCE,
-            icon: 'img/man.png'            
-        }
-      };
-
+      
       var createTarget = function(targetLat, targetLng, iconURL){
         tempTarget = {
           id: "Target",
@@ -622,7 +599,6 @@ angular.module('starter.controllers', [])
         }
       }
 
-
       $rootScope.$on('userDetail', function(event, data){
         $scope.validateUser();
         $scope.userDetail = data
@@ -647,6 +623,33 @@ angular.module('starter.controllers', [])
         createDirectionsService("carpark", targetDestination, carParkDestination)
         
       })
+
+      $scope.myLocation.lng = position.coords.longitude;
+      $scope.myLocation.lat = position.coords.latitude;
+ 
+
+
+      $scope.map = {
+        center: {
+          latitude: $scope.myLocation.lat,
+          longitude: $scope.myLocation.lng
+        },
+        zoom: 15,
+        pan: 2
+      };
+
+      $scope.marker = {
+        id: "you",
+        coords: {
+          latitude: $scope.myLocation.lat,
+          longitude: $scope.myLocation.lng
+        },
+        options: {
+            animation: google.maps.Animation.BOUNCE,
+            icon: 'img/man.png'            
+        }
+      };
+
       
     })
 
@@ -670,6 +673,7 @@ angular.module('starter.controllers', [])
     $http.put(url, data).success(function(response){
       console.log(response)
       $state.go('app.home')
+
       
     }).error(function(response){
       console.log(response)
