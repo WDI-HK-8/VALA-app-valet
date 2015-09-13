@@ -131,17 +131,17 @@ angular.module('starter.controllers', [])
         }
       };
 
-      $scope.pickUpMarkers =[];
+      $scope.allMarkers =[];
       var newMarker = {};
 
-      var createDirectionsService = function(originLoc, destinationLoc){
+      var createDirectionsService = function(originLoc, destinationLoc, mode){
         var directionsService = new google.maps.DirectionsService();
         var directionsDisplay = new google.maps.DirectionsRenderer();
 
         var request = {
           origin : originLoc,
           destination : destinationLoc,
-          travelMode : google.maps.TravelMode.WALKING
+          travelMode : mode
         }      
                 
         directionsService.route(request, function(response, status) {
@@ -171,9 +171,9 @@ angular.module('starter.controllers', [])
             ];
           }              
         });
-      }
+      };
 
-      var createMarker = function(title, id, userName, userPic, transmission, userPhoneNum, latitude, longitude, address, distanceEST, timeEST, icon){
+      var createPickUpMarker = function(title, id, userName, userPic, transmission, userPhoneNum, latitude, longitude, address, distanceEST, timeEST, icon){
         newMarker =  {
           title:        title,
           id:           id,
@@ -194,12 +194,58 @@ angular.module('starter.controllers', [])
             $scope.selfLocation   = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
             $scope.destination    = new google.maps.LatLng(this.latitude, this.longitude) 
             
-            createDirectionsService($scope.selfLocation, $scope.destination)
+            createDirectionsService($scope.selfLocation, $scope.destination, google.maps.TravelMode.WALKING)
           }
         }
       }
 
-      var runMarker = function(indexElement, title, iconURL){
+      var createCarParkMarker = function(title, latitude, longitude, address, p_icon){
+        $scope.carParkmarker =  {
+          id: "carpark",
+          coords: {
+            latitude: latitude,
+            longitude: longitude
+          },
+          options:{
+            animation: google.maps.Animation.DROP,
+            icon: p_icon
+          }
+        }
+      };
+
+      var createDropOffMarker = function(title, id, userName, userPic, transmission, userPhoneNum, p_latitude, p_longitude, p_address, latitude, longitude, address, distanceEST, timeEST, icon){
+        newMarker =  {
+          title:        title,
+          id:           id,
+          name:         userName,
+          picture:      userPic,
+          transmission: transmission, 
+          phone:        userPhoneNum,
+          p_latitude:   p_latitude,
+          p_longitude:  p_longitude,
+          p_location:   p_address,
+          latitude:     latitude,
+          longitude:    longitude,
+          location:     address,
+          distanceEST:  distanceEST,
+          timeEST:      timeEST,
+          icon:         icon,
+          show:         false,
+          clickPin: function() {
+            $scope.currentLocation = this
+            console.log(this)       
+            $scope.parkLocation   = new google.maps.LatLng(this.p_latitude, this.p_longitude)
+            $scope.destination    = new google.maps.LatLng(this.latitude, this.longitude) 
+            
+            createDirectionsService($scope.parkLocation, $scope.destination, google.maps.TravelMode.DRIVING)
+
+            createCarParkMarker("Car Park", p_latitude, p_longitude, p_address, 'img/parkinglot.png')
+          }
+        }
+      }
+
+
+      var runPickUpMarker = function(indexElement, title, iconURL){
                  
         var title           = title
         var user            = indexElement.user;
@@ -235,18 +281,72 @@ angular.module('starter.controllers', [])
             distanceEST = responseD.rows[0].elements[0].distance.text;
             timeEST     = responseD.rows[0].elements[0].duration.text;
 
-            createMarker(title, id, userName, userPic, transmission, userPhoneNum, latitude, longitude, address, distanceEST, timeEST, iconURL)
+            createPickUpMarker(title, id, userName, userPic, transmission, userPhoneNum, latitude, longitude, address, distanceEST, timeEST, iconURL)
 
-            $scope.pickUpMarkers.push(newMarker)
+            $scope.allMarkers.push(newMarker)
           }
-        // console.log($scope.pickUpMarkers)
+        // console.log($scope.allMarkers)
         })
       }
 
+      var runDropOffMarker = function(indexElement, title, iconURL){
+                 
+        var title                 = title
+        var user                  = indexElement.user;
+        var parkingLocation       = indexElement.parking_location;
+        var destinationLocation   = indexElement.destination_location; 
+        var id                    = indexElement.id;
+        
+
+        var userName              = user.name;
+        var userPic               = user.profile_picture;
+        var transmission          = user.transmission;
+        var userPhoneNum          = user.phone_number;
+
+        var parkingAddress        = parkingLocation.address;
+        var parkingLatitude       = parkingLocation.latitude;
+        var parkingLongitude      = parkingLocation.longitude;
+
+        var destinationAddress    = destinationLocation.address;
+        var destinationLatitude   = destinationLocation.latitude;
+        var destinationLongitude  = destinationLocation.longitude;
+
+
+        var myCarPark       = new google.maps.LatLng(parkingLatitude, parkingLongitude)
+        var myDestination   = new google.maps.LatLng(destinationLatitude, destinationLongitude)
+        var iconURL         = iconURL
+
+        var distanceEST;
+        var timeEST
+
+
+        var matrixService   = new google.maps.DistanceMatrixService();
+        
+        //checking how to implement two way points
+        var durationDistance = {
+          origins:      [myCarPark],
+          destinations: [myDestination],
+          travelMode : google.maps.TravelMode.DRIVING 
+        }
+         
+        matrixService.getDistanceMatrix(durationDistance, function(responseD, status){
+          if (status == google.maps.DistanceMatrixStatus.OK){
+            distanceEST = responseD.rows[0].elements[0].distance.text;
+            timeEST     = responseD.rows[0].elements[0].duration.text;
+
+          createDropOffMarker(title, id, userName, userPic, transmission, userPhoneNum, parkingLatitude, parkingLongitude, parkingAddress, destinationLatitude, destinationLongitude, destinationAddress, distanceEST, timeEST, iconURL)
+
+            $scope.allMarkers.push(newMarker)
+
+
+          }
+        console.log($scope.allMarkers)
+        })
+      }
 
       $http.get($scope.rootURL + "api/v1/requests/pickup").success(function(indexPickups){
       for (var num = 0; num < indexPickups.length; num++){
-        runMarker(indexPickups[num],"Pick up ticket", 'img/blue-dot.png');
+        runPickUpMarker(indexPickups[num],"Pick up ticket", 'img/blue-dot.png');
       }
       
       }).error(function(indexPickups){
@@ -294,46 +394,88 @@ angular.module('starter.controllers', [])
               transmission = 'automatic'
             }
 
-            createMarker(title, id, userName, userPic, transmission, userPhoneNum, latitude, longitude, address, distanceEST, timeEST, iconURL)
+            createPickUpMarker(title, id, userName, userPic, transmission, userPhoneNum, latitude, longitude, address, distanceEST, timeEST, iconURL)
 
-            $scope.pickUpMarkers.push(newMarker)
+            $scope.allMarkers.push(newMarker)
           }
-        // console.log($scope.pickUpMarkers)
+        // console.log($scope.allMarkers)
         })
       }
 
-      PrivatePub.subscribe('/valet/new', function(data, channel) {
-        console.log(data);
+      var AddDropOffMarker = function(data, title, iconURL){
+                 
+        var title           = title
+        var request         = data.request;
+
+        var id              = request.id;
+        var userName        = request.name;
+        var userPic         = request.picture;
+        var transmission    = request.transmission;
+        var userPhoneNum    = request.phone;
+
+        var address         = request.location;
+        var latitude        = request.latitude;
+        var longitude       = request.longitude;
+
+        var p_address         = request.location;
+        var p_latitude        = request.latitude;
+        var p_longitude       = request.longitude;        
         
-        AddPickUpMarker(data, "Pick up ticket", 'img/blue-dot.png')
+        var parkLocation   = new google.maps.LatLng(p_latitude, p_longitude)
+        var myDestination     = new google.maps.LatLng(latitude, longitude)
+        var iconURL           = iconURL
 
+        var distanceEST;
+        var timeEST
 
-      });
-      // console.log(PrivatePubServices.logMessages(data))
+        var matrixService   = new google.maps.DistanceMatrixService();
+        
+        var durationDistance = {
+          origins:      [parkLocation],
+          destinations: [myDestination],
+          travelMode : google.maps.TravelMode.DRIVING
+        }
+         
+        matrixService.getDistanceMatrix(durationDistance, function(responseD, status){
+          if (status == google.maps.DistanceMatrixStatus.OK){
+            distanceEST = responseD.rows[0].elements[0].distance.text;
+            timeEST     = responseD.rows[0].elements[0].duration.text;
 
-      // $http.get($scope.rootURL + "api/v1/requests/pickup").success(function(indexPickups){
-      //   for (var num = 0; num < indexPickups.length; num++){
-      //     runMarker(indexPickups[num],"Pick up ticket", 'img/blue-dot.png');
-      //   }
-      // }).error(function(indexPickups){
-      //   console.log(indexPickups)
-      // })
+            if (transmission == true){
+              transmission = 'manual'
+            } else {
+              transmission = 'automatic'
+            }
 
-      // var autoRefresh = function(){
-      //   window.setInterval(refreshPins, 10000)
-      // }
+            createDropOffMarker(title, id, userName, userPic, transmission, userPhoneNum, p_latitude, p_longitude, p_address, latitude, longitude, address, distanceEST, timeEST, iconURL)
 
-      // autoRefresh();
+            $scope.allMarkers.push(newMarker)
+          }
+        // console.log($scope.allMarkers)
+        })
+      }
+
 
       $scope.dropOffMarkers =[];
 
       $http.get($scope.rootURL + "api/v1/requests/dropoff").success(function(indexDropoffs){
         for (var num = 0; num < indexDropoffs.length; num++){
-          runMarker(indexDropoffs[num], "Drop off ticket", 'img/red-dot.png')
+          runDropOffMarker(indexDropoffs[num], "Drop off ticket", 'img/red-dot.png')
         }
       }).error(function(indexDropoffs){
         console.log(indexDropoffs)
       })
+
+      PrivatePub.subscribe('/valet/new', function(data, channel) {
+        console.log(data);
+        
+        if (data.request.type == 'pick_up'){
+          AddPickUpMarker(data, "Pick up ticket", 'img/blue-dot.png')
+        } else{
+          AddDropOffMarker(data, "Drop off ticket", 'img/red-dot.png')
+        }
+      });
+      
 
     });
   }
