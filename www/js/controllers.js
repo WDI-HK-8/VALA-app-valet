@@ -91,7 +91,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $ionicModal, $state, $rootScope){
+.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $ionicModal, $state, $rootScope, PrivatePubServices){
   nemSimpleLogger.doLog = true; //default is true
   nemSimpleLogger.currentLevel = nemSimpleLogger.LEVELS.debug
 
@@ -100,6 +100,9 @@ angular.module('starter.controllers', [])
     lng : '',
     lat: ''
   }
+
+  PrivatePubServices.subscribe('/valet/new')
+  PrivatePubServices.logMessages('/valet/new')
 
   $scope.drawSelfMap = function(position) { 
     //$scope.$apply is needed to trigger the digest cycle when the geolocation arrives and to update all the watchers
@@ -241,6 +244,8 @@ angular.module('starter.controllers', [])
       }
 
 
+
+
       $http.get($scope.rootURL + "api/v1/requests/pickup").success(function(indexPickups){
         for (var num = 0; num < indexPickups.length; num++){
           runMarker(indexPickups[num],"Pick up ticket", 'img/blue-dot.png');
@@ -282,7 +287,7 @@ angular.module('starter.controllers', [])
   }
 })
 
-.controller('OnRoutePickUpCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $timeout, $rootScope){
+.controller('OnRoutePickUpCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $timeout, $rootScope, $state){
   nemSimpleLogger.doLog = true; //default is true
   nemSimpleLogger.currentLevel = nemSimpleLogger.LEVELS.debug
 
@@ -430,12 +435,31 @@ angular.module('starter.controllers', [])
         
       })
       
-      console.log(data)
-      console.log($scope.userDetail)
-
     })
 
   }
   navigator.geolocation.getCurrentPosition($scope.pickUpMap); 
 
+  $scope.parked = function(){
+    
+    var valetID = this.userDetail.valet_id_pick_up;
+    var requestID = this.userDetail.id
+
+    var url = $scope.rootURL + "api/v1/valets/" + valetID + "/requests/" + requestID + "/car_parked"
+    console.log(url)
+
+    var data = {
+      request: {
+        bay_number: $scope.val
+      }
+    }
+
+    $http.put(url, data).success(function(response){
+      console.log(response)
+      $state.go('app.home')
+    }).error(function(response){
+      console.log(response)
+      Alert('Issues. Please resubmit or contact HQ')
+    })      
+  }
 })
