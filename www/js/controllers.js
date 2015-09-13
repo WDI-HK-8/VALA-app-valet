@@ -407,7 +407,7 @@ angular.module('starter.controllers', [])
 
       $rootScope.$on('userDetail', function(event, data){
         $scope.validateUser();
-        $rootScope.userDetail = data
+        $scope.userDetail = data
         console.log($scope.userDetail)
 
         var targetLat = data.source_location.latitude 
@@ -430,8 +430,8 @@ angular.module('starter.controllers', [])
         
       })
       
-      
-      console.log($rootScope.userDetail)
+      console.log(data)
+      console.log($scope.userDetail)
 
     })
 
