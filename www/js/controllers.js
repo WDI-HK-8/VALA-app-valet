@@ -8,7 +8,7 @@ angular.module('starter.controllers', [])
   });  
 
 
-  var validateUser = function(){
+  $scope.validateUser = function(){
     $scope.currentUser = JSON.parse($window.localStorage.getItem('current-user'))
     
   };
@@ -21,7 +21,7 @@ angular.module('starter.controllers', [])
     
     $auth.submitLogin($scope.loginData).then(function(response){
       $window.localStorage.setItem('current-user', JSON.stringify(response));
-      validateUser();
+      $scope.validateUser();
       
 
       $state.go('app.home');
@@ -57,7 +57,7 @@ angular.module('starter.controllers', [])
   $scope.doSignup = function(){
     $auth.submitRegistration($scope.registrationForm).then(function(response){
       $window.localStorage.setItem('current-user', JSON.stringify(response.data.data));
-      validateUser();
+      $scope.validateUser();
  
       $state.go('app.home');
       // console.log(response);
@@ -69,7 +69,7 @@ angular.module('starter.controllers', [])
 
   $scope.logout = function(){
     $window.localStorage.setItem('current-user', null)
-    validateUser();
+    $scope.validateUser();
 
   };
 
@@ -78,6 +78,7 @@ angular.module('starter.controllers', [])
 
 .controller('ProfileCtrl', function($scope, $http){
 
+  $scope.validateUser();
   var valetID = $scope.currentUser.id
   var url = $scope.rootURL + "api/v1/valets/" + valetID
   
@@ -94,6 +95,7 @@ angular.module('starter.controllers', [])
   nemSimpleLogger.doLog = true; //default is true
   nemSimpleLogger.currentLevel = nemSimpleLogger.LEVELS.debug
 
+  $scope.validateUser();
   $scope.myLocation = {
     lng : '',
     lat: ''
@@ -284,6 +286,7 @@ angular.module('starter.controllers', [])
   nemSimpleLogger.doLog = true; //default is true
   nemSimpleLogger.currentLevel = nemSimpleLogger.LEVELS.debug
 
+  $scope.validateUser();
   $scope.myLocation = {
     lng : '',
     lat: ''
@@ -335,53 +338,27 @@ angular.module('starter.controllers', [])
         }
       }
 
-
-      var pathSpecificationCarPark = function(id, path, color){
-        $scope.polylines_park = [
-          {
-            id: id,
-            path: path, 
-            stroke: {
-                color: color,
-                weight: 2
-            },
-            editable: false,
-            draggable: false,
-            geodesic: false,
-            visible: true,
-            icons: [{
-                icon: {
-                },
-                offset: '25px',
-                repeat: '50px'
-            }]
-          }
-        ];
-      }
-
-      var pathSpecificationTarget = function(id, path, color){
-        $scope.polylines = [
-          {
-            id: id,
-            path: path, 
-            stroke: {
-                color: color,
-                weight: 2
-            },
-            editable: false,
-            draggable: false,
-            geodesic: false,
-            visible: true,
-            icons: [{
-                icon: {
-                },
-                offset: '25px',
-                repeat: '50px'
-            }]
-          }
-        ];
-      }
-
+      var polylineSpecification = function(id, path, color){
+        myPolyLine = {
+          id: id,
+          path: path, 
+          stroke: {
+              color: color,
+              weight: 2
+          },
+          editable: false,
+          draggable: false,
+          geodesic: false,
+          visible: true,
+          icons: [{
+              icon: {
+              },
+              offset: '25px',
+              repeat: '50px'
+          }]
+        }
+        return myPolyLine  
+      };
 
       var createDirectionsService = function(destination, originLoc, destinationLoc){
         var directionsService = new google.maps.DirectionsService();
@@ -398,8 +375,11 @@ angular.module('starter.controllers', [])
           if (status == google.maps.DirectionsStatus.OK) {
               directionsDisplay.setDirections(response);
               $scope.path_coords = response.routes[0].overview_path
+              var myPolyLine ={};
+              
+              $scope.polylines_park = [polylineSpecification(888, $scope.path_coords, 'green')]
+              console.log($scope.polylines_park)
 
-            pathSpecificationCarPark(888, $scope.path_coords, 'green')
           }              
         });
 
@@ -414,7 +394,10 @@ angular.module('starter.controllers', [])
                 directionsDisplay.setDirections(response);
             console.log(response)
               $scope.path_coords = response.routes[0].overview_path
-              pathSpecificationTarget(999, $scope.path_coords, 'blue')
+              var myPolyLine ={};
+              
+              $scope.polylines = [polylineSpecification(999, $scope.path_coords, 'blue')]
+              console.log($scope.polylines)
               
             }              
           });
@@ -423,8 +406,8 @@ angular.module('starter.controllers', [])
 
 
       $rootScope.$on('userDetail', function(event, data){
-        
-        $scope.userDetail = data
+        $scope.validateUser();
+        $rootScope.userDetail = data
         console.log($scope.userDetail)
 
         var targetLat = data.source_location.latitude 
@@ -446,6 +429,9 @@ angular.module('starter.controllers', [])
         createDirectionsService("carpark", targetDestination, carParkDestination)
         
       })
+      
+      
+      console.log($rootScope.userDetail)
 
     })
 
