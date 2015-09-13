@@ -239,21 +239,91 @@ angular.module('starter.controllers', [])
 
             $scope.pickUpMarkers.push(newMarker)
           }
-        console.log($scope.pickUpMarkers)
+        // console.log($scope.pickUpMarkers)
         })
       }
 
 
-
-
       $http.get($scope.rootURL + "api/v1/requests/pickup").success(function(indexPickups){
-        for (var num = 0; num < indexPickups.length; num++){
-          runMarker(indexPickups[num],"Pick up ticket", 'img/blue-dot.png');
-        }
+      for (var num = 0; num < indexPickups.length; num++){
+        runMarker(indexPickups[num],"Pick up ticket", 'img/blue-dot.png');
+      }
+      
       }).error(function(indexPickups){
         console.log(indexPickups)
       })
+    
+      var AddPickUpMarker = function(data, title, iconURL){
+                 
+        var title           = title
+        var request         = data.request;
 
+        var id              = request.id;
+        var userName        = request.name;
+        var userPic         = request.picture;
+        var transmission    = request.transmission;
+        var userPhoneNum    = request.phone;
+
+        var address         = request.location;
+        var latitude        = request.latitude;
+        var longitude       = request.longitude;
+        
+        var myCurLoc        = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
+        var myDestination   = new google.maps.LatLng(latitude, longitude)
+        var iconURL         = iconURL
+
+        var distanceEST;
+        var timeEST
+
+        var matrixService   = new google.maps.DistanceMatrixService();
+        
+        var durationDistance = {
+          origins:      [myCurLoc],
+          destinations: [myDestination],
+          travelMode : google.maps.TravelMode.WALKING
+        }
+         
+        matrixService.getDistanceMatrix(durationDistance, function(responseD, status){
+          if (status == google.maps.DistanceMatrixStatus.OK){
+            distanceEST = responseD.rows[0].elements[0].distance.text;
+            timeEST     = responseD.rows[0].elements[0].duration.text;
+
+            if (transmission == true){
+              transmission = 'manual'
+            } else {
+              transmission = 'automatic'
+            }
+
+            createMarker(title, id, userName, userPic, transmission, userPhoneNum, latitude, longitude, address, distanceEST, timeEST, iconURL)
+
+            $scope.pickUpMarkers.push(newMarker)
+          }
+        // console.log($scope.pickUpMarkers)
+        })
+      }
+
+      PrivatePub.subscribe('/valet/new', function(data, channel) {
+        console.log(data);
+        
+        AddPickUpMarker(data, "Pick up ticket", 'img/blue-dot.png')
+
+
+      });
+      // console.log(PrivatePubServices.logMessages(data))
+
+      // $http.get($scope.rootURL + "api/v1/requests/pickup").success(function(indexPickups){
+      //   for (var num = 0; num < indexPickups.length; num++){
+      //     runMarker(indexPickups[num],"Pick up ticket", 'img/blue-dot.png');
+      //   }
+      // }).error(function(indexPickups){
+      //   console.log(indexPickups)
+      // })
+
+      // var autoRefresh = function(){
+      //   window.setInterval(refreshPins, 10000)
+      // }
+
+      // autoRefresh();
 
       $scope.dropOffMarkers =[];
 
@@ -268,7 +338,8 @@ angular.module('starter.controllers', [])
     });
   }
 
-  navigator.geolocation.getCurrentPosition($scope.drawSelfMap); 
+
+  navigator.geolocation.getCurrentPosition($scope.drawSelfMap);
   
 
   $scope.valetReply = function(){
@@ -457,6 +528,7 @@ angular.module('starter.controllers', [])
     $http.put(url, data).success(function(response){
       console.log(response)
       $state.go('app.home')
+      
     }).error(function(response){
       console.log(response)
       Alert('Issues. Please resubmit or contact HQ')

@@ -11,10 +11,11 @@ app.service('PrivatePubServices', function() {
   x.logMessages = function(channel) {
     PrivatePub.subscribe(channel, function(data, channel) {
       console.log(channel);
-      console.log(data);
+      // console.log(data);
       // PrivatePub.unsubscribe(channel)
     });
   };
+
 
   return x;
 });
