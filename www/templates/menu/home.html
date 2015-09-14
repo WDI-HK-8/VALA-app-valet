@@ -1,5 +1,5 @@
 
-<ion-view view-title="Requests Overview" > 
+<ion-view cache-view="false" view-title="Requests Overview" > 
 
   <ion-content data-tap-disabled="true">
 
@@ -18,37 +18,25 @@
           idkey="marker.id" >
         </ui-gmap-marker>
 
+        <ui-gmap-marker 
+          coords="carParkmarker.coords" 
+          options="carParkmarker.options" 
+          events="carParkmarker.events" 
+          idkey="3" >
+        </ui-gmap-marker>
+
         <ui-gmap-markers
-          models  = "pickUpMarkers"
+          models  = "allMarkers"
           coords  = "'self'"
           icon    = "'icon'"
           click  =  "clickPin(this)">
           <ui-gmap-windows show="show">
             <div ng-non-bindable>
-              selected
+              SELECTED
             </div>
           </ui-gmap-windows>
         </ui-gmap-markers>
 
-        <ui-gmap-markers
-          models  = "dropOffMarkers"
-          coords  = "'self'"
-          icon    = "'icon'"
-          click  =  "clickPin(this)">
-          <ui-gmap-windows show="show">
-            <div ng-non-bindable>
-              <h2>{{id}}</h2>
-              <p>Name: {{name}}</p>
-              <p>Phone: {{phone}}</p>
-              <p>Transmission: {{transmission}}</p>  
-              <p>Address: {{location}}</p>
-              <p>Est.distance: {{distanceEST}}</p>
-              <p>Est.time: {{timeEST}}</p>
-              <button>Accept</button>
-              <button>Busy</button>
-            </div>
-          </ui-gmap-windows>
-        </ui-gmap-markers>
 
         <ui-gmap-polyline 
           ng-repeat="p in polylines" 
@@ -69,7 +57,7 @@
   
 <!-- card show -->
   <div style="position: absolute; bottom: 0px; width: 100%">
-    <div class="card" id="currentLocation" ng-cloak ng-show="currentLocation">
+    <div class="card" id="currentLocation" ng-cloak ng-show="currentLocation.title == 'Pick up ticket'  ">
       <div class="item item-divider" >
         {{currentLocation.title}} : {{currentLocation.id}}
       </div>
@@ -82,6 +70,24 @@
       </div>
       <button class="button button-small button-assertive buttonDetail" ng-click="currentLocation = false">BUSY</button>
       <button class="button button-small button-calm buttonDetail"ng-click="valetReply()" >ACCEPT</button>
+    </div>
+  </div>
+
+  <div style="position: absolute; bottom: 0px; width: 100%">
+    <div class="card" id="currentLocation" ng-cloak ng-show="currentLocation.title == 'Drop off ticket'  ">
+      <div class="item item-divider" >
+        {{currentLocation.title}} : {{currentLocation.id}}
+      </div>
+      <div class="item item-text-wrap">
+        Client: {{currentLocation.name}}<br>
+        Transmission: {{currentLocation.transmission}}<br>
+        Phone: {{currentLocation.phone}}<br>
+        Carpark: {{currentLocation.p_location | limitTo : 35}}<br>
+        Drop off address: {{currentLocation.location | limitTo : 31}}<br>
+        EST.distance / time: {{currentLocation.distanceEST}} / {{currentLocation.timeEST}}
+      </div>
+      <button class="button button-small button-assertive buttonDetail" ng-click="currentLocation = false">BUSY</button>
+      <button class="button button-small button-calm buttonDetail"ng-click="valetReplyDrop()" >ACCEPT</button>
     </div>
   </div>
   
