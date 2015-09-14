@@ -3,13 +3,13 @@ angular.module('starter.controllers', [])
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, $auth, $ionicPopup, $window, $log, $state, $http, $rootScope) {
 
   $scope.rootURL = "http://localhost:3000/"
-  $scope.$on('pushChangesToAllNodes', function( event, message ){
-    $scope.$broadcast( message.name, message.data );
-  });  
-
+  
 
   $scope.validateUser = function(){
     $scope.currentUser = JSON.parse($window.localStorage.getItem('current-user'))
+  };
+
+  $scope.validatePickUp = function(){
     
   };
 
@@ -51,7 +51,6 @@ angular.module('starter.controllers', [])
   };
 
   //sign up
-
   $scope.registrationForm = {};
 
   $scope.doSignup = function(){
@@ -60,20 +59,15 @@ angular.module('starter.controllers', [])
       $scope.validateUser();
  
       $state.go('app.home');
-      // console.log(response);
 
     }).catch(function(response){
-      // console.log(response)
     })
   }
 
   $scope.logout = function(){
     $window.localStorage.setItem('current-user', null)
     $scope.validateUser();
-
   };
-
-
 })
 
 .controller('ProfileCtrl', function($scope, $http){
@@ -91,7 +85,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $state, $rootScope, PrivatePubServices){
+.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $state, $rootScope, PrivatePubServices, $window){
   nemSimpleLogger.doLog = true; //default is true
   nemSimpleLogger.currentLevel = nemSimpleLogger.LEVELS.debug
 
@@ -389,11 +383,7 @@ angular.module('starter.controllers', [])
             distanceEST = responseD.rows[0].elements[0].distance.text;
             timeEST     = responseD.rows[0].elements[0].duration.text;
 
-            if (transmission == true){
-              transmission = 'manual'
-            } else {
-              transmission = 'automatic'
-            }
+            transmission = transmission ? 'manual' : 'automatic';
 
             createPickUpMarker(title, id, userName, userPic, transmission, userPhoneNum, latitude, longitude, address, distanceEST, timeEST, iconURL)
 
@@ -442,11 +432,7 @@ angular.module('starter.controllers', [])
             distanceEST = responseD.rows[0].elements[0].distance.text;
             timeEST     = responseD.rows[0].elements[0].duration.text;
 
-            if (transmission == true){
-              transmission = 'manual'
-            } else {
-              transmission = 'automatic'
-            }
+            transmission = transmission ? 'manual' : 'automatic';
 
             createDropOffMarker(title, id, userName, userPic, transmission, userPhoneNum, p_latitude, p_longitude, p_address, latitude, longitude, address, distanceEST, timeEST, iconURL)
 
@@ -487,11 +473,15 @@ angular.module('starter.controllers', [])
   $scope.valetReply = function(){
     var valetID = $scope.currentUser.id;
     var requestID = this.currentLocation.id
+    
     var url = $scope.rootURL + "api/v1/valets/" + valetID + "/requests/" + requestID + "/valet_pick_up"
 
     $http.patch(url).success(function(response){
-      $rootScope.$emit('userDetail', response);
+
       console.log(response);
+
+      $scope.currentPickUp = $window.localStorage.setItem('current-pickup', JSON.stringify(response));
+
       $state.go('app.pickup');
 
     }).error(function(response){
@@ -500,7 +490,7 @@ angular.module('starter.controllers', [])
   }
 })
 
-.controller('OnRoutePickUpCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $rootScope, $state, PrivatePubServices){
+.controller('OnRoutePickUpCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $rootScope, $state, PrivatePubServices, $window){
   nemSimpleLogger.doLog = true; //default is true
   nemSimpleLogger.currentLevel = nemSimpleLogger.LEVELS.debug
 
@@ -599,35 +589,8 @@ angular.module('starter.controllers', [])
         }
       }
 
-      $rootScope.$on('userDetail', function(event, data){
-        $scope.validateUser();
-        $scope.userDetail = data
-        console.log($scope.userDetail)
-
-        var targetLat = data.source_location.latitude 
-        var targetLng = data.source_location.longitude 
-        var selfLocation   = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
-        
-        var targetDestination = new google.maps.LatLng(targetLat, targetLng) 
-
-        var targetCarParkLat  = data.parking_location.latitude
-        var targetCarParkLng  = data.parking_location.longitude
-
-        var carParkDestination = new google.maps.LatLng(targetCarParkLat, targetCarParkLng) 
-
-
-        createTarget(targetLat, targetLng, 'img/blue-dot.png')
-        createDirectionsService("client", selfLocation, targetDestination)
-        
-        createTarget(targetCarParkLat, targetCarParkLng, 'img/parkinglot.png')
-        createDirectionsService("carpark", targetDestination, carParkDestination)
-        
-      })
-
       $scope.myLocation.lng = position.coords.longitude;
       $scope.myLocation.lat = position.coords.latitude;
- 
-
 
       $scope.map = {
         center: {
@@ -650,6 +613,29 @@ angular.module('starter.controllers', [])
         }
       };
 
+      $scope.currentPickUp = JSON.parse($window.localStorage.getItem('current-pickup'))
+      console.log($scope.currentPickUp)
+
+
+      $scope.validateUser();
+
+      var targetLat = $scope.currentPickUp.source_location.latitude 
+      var targetLng = $scope.currentPickUp.source_location.longitude 
+      var selfLocation   = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
+      
+      var targetDestination = new google.maps.LatLng(targetLat, targetLng) 
+
+      var targetCarParkLat  = $scope.currentPickUp.parking_location.latitude
+      var targetCarParkLng  = $scope.currentPickUp.parking_location.longitude
+
+      var carParkDestination = new google.maps.LatLng(targetCarParkLat, targetCarParkLng) 
+
+      createTarget(targetLat, targetLng, 'img/blue-dot.png')
+      createDirectionsService("client", selfLocation, targetDestination)
+      
+      createTarget(targetCarParkLat, targetCarParkLng, 'img/parkinglot.png')
+      createDirectionsService("carpark", targetDestination, carParkDestination)
+        
       
     })
 

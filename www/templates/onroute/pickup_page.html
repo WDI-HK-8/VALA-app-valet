@@ -1,4 +1,4 @@
-<ion-view view-title="Pick Up On Route" > 
+<ion-view cache-view="false" view-title="Pick Up On Route" > 
 
   <ion-content data-tap-disabled="true">
 
@@ -65,17 +65,17 @@
 
   <!-- card show -->
   <div style="position: absolute; bottom: 0px; width: 100%">
-    <div class="card" id="userDetail" ng-cloak >
+    <div class="card" id="currentPickUp" ng-cloak >
       <div class="item item-divider" >
-        AUTH CODE : {{userDetail.auth_code}}
+        AUTH CODE : {{currentPickUp.auth_code}}
       </div>
       <div class="userDetails item item-text-wrap">
         <img src = "http://placehold.it/100x100"><br>
-        <p>Client: {{userDetail.user.name}}<br>
-        Phone:{{userDetail.user.phone_number}}<br>
-        Car:{{userDetail.user.car.color}} ~ {{userDetail.user.car.make}} ~ {{userDetail.user.car.license_plate}}<br>
-        Address: {{userDetail.source_location.address}}<br>
-        Car Park: {{userDetail.parking_location.address}}<p>
+        <p>Client: {{currentPickUp.user.name}}<br>
+        Phone:{{currentPickUp.user.phone_number}}<br>
+        Car:{{currentPickUp.user.car.color}} ~ {{currentPickUp.user.car.make}} ~ {{currentPickUp.user.car.license_plate}}<br>
+        Address: {{currentPickUp.source_location.address}}<br>
+        Car Park: {{currentPickUp.parking_location.address}}<p>
       </div>
       <div class="bayNumberSubmit item item-divider">
         <div class="list">
