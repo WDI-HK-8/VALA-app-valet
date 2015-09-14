@@ -2,15 +2,10 @@ angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, $auth, $ionicPopup, $window, $log, $state, $http, $rootScope) {
 
-  $scope.rootURL = "http://localhost:3000/"
+  $scope.rootURL = "http://localhost:3000/";
   
-
   $scope.validateUser = function(){
     $scope.currentUser = JSON.parse($window.localStorage.getItem('current-user'))
-  };
-
-  $scope.validatePickUp = function(){
-    
   };
 
   // Form data for the login modal
@@ -23,22 +18,21 @@ angular.module('starter.controllers', [])
       $window.localStorage.setItem('current-user', JSON.stringify(response));
       $scope.validateUser();
       
-
       $state.go('app.home');
 
-      var valetID = response.id
-      var url = $scope.rootURL + "api/v1/valets/" + valetID
+      var valetID = response.id;
+      var url = $scope.rootURL + "api/v1/valets/" + valetID;
       
       var data = {
         valet: {
           status: 'available'
         }
-      }
+      };
 
       $http.patch(url, data).success(function(change_status){
        
       }).error(function(change_status){
-        console.log(change_status)        
+        console.log(change_status);        
       })
  
     }).catch(function(response){
@@ -62,10 +56,10 @@ angular.module('starter.controllers', [])
 
     }).catch(function(response){
     })
-  }
+  };
 
   $scope.logout = function(){
-    $window.localStorage.setItem('current-user', null)
+    $window.localStorage.setItem('current-user', null);
     $scope.validateUser();
   };
 })
@@ -73,12 +67,12 @@ angular.module('starter.controllers', [])
 .controller('ProfileCtrl', function($scope, $http){
 
   $scope.validateUser();
-  var valetID = $scope.currentUser.id
-  var url = $scope.rootURL + "api/v1/valets/" + valetID
+  var valetID = $scope.currentUser.id;
+  var url = $scope.rootURL + "api/v1/valets/" + valetID;
   
   $http.get(url).success(function(response){
     
-    $scope.valetInfo = response
+    $scope.valetInfo = response;
   }).error(function(response){
     
   })
@@ -93,10 +87,10 @@ angular.module('starter.controllers', [])
   $scope.myLocation = {
     lng : '',
     lat: ''
-  }
+  };
 
-  PrivatePubServices.subscribe('/valet/new')
-  PrivatePubServices.logMessages('/valet/new')
+  PrivatePubServices.subscribe('/valet/new');
+  PrivatePubServices.logMessages('/valet/new');
 
   $scope.drawSelfMap = function(position) { 
     //$scope.$apply is needed to trigger the digest cycle when the geolocation arrives and to update all the watchers
@@ -137,7 +131,7 @@ angular.module('starter.controllers', [])
           origin : originLoc,
           destination : destinationLoc,
           travelMode : mode
-        }      
+        };      
                 
         directionsService.route(request, function(response, status) {
           if (status == google.maps.DirectionsStatus.OK) {
@@ -192,7 +186,7 @@ angular.module('starter.controllers', [])
             createDirectionsService($scope.selfLocation, $scope.destination, google.maps.TravelMode.WALKING)
           }
         }
-      }
+      };
 
       var createCarParkMarker = function(title, latitude, longitude, address, p_icon){
         $scope.carParkmarker =  {
@@ -237,7 +231,7 @@ angular.module('starter.controllers', [])
             createCarParkMarker("Car Park", p_latitude, p_longitude, p_address, 'img/parkinglot.png')
           }
         }
-      }
+      };
 
 
       var runPickUpMarker = function(indexElement, title, iconURL){
@@ -282,7 +276,7 @@ angular.module('starter.controllers', [])
           }
         // console.log($scope.allMarkers)
         })
-      }
+      };
 
       var runDropOffMarker = function(indexElement, title, iconURL){
                  
@@ -329,23 +323,21 @@ angular.module('starter.controllers', [])
             distanceEST = responseD.rows[0].elements[0].distance.text;
             timeEST     = responseD.rows[0].elements[0].duration.text;
 
-          createDropOffMarker(title, id, userName, userPic, transmission, userPhoneNum, parkingLatitude, parkingLongitude, parkingAddress, destinationLatitude, destinationLongitude, destinationAddress, distanceEST, timeEST, iconURL)
+            createDropOffMarker(title, id, userName, userPic, transmission, userPhoneNum, parkingLatitude, parkingLongitude, parkingAddress, destinationLatitude, destinationLongitude, destinationAddress, distanceEST, timeEST, iconURL)
 
             $scope.allMarkers.push(newMarker)
-
-
           }
         console.log($scope.allMarkers)
         })
-      }
+      };
 
       $http.get($scope.rootURL + "api/v1/requests/pickup").success(function(indexPickups){
       for (var num = 0; num < indexPickups.length; num++){
         runPickUpMarker(indexPickups[num],"Pick up ticket", 'img/blue-dot.png');
-      }
+      };
       
       }).error(function(indexPickups){
-        console.log(indexPickups)
+        console.log(indexPickups);
       })
     
       var AddPickUpMarker = function(data, title, iconURL){
@@ -391,7 +383,7 @@ angular.module('starter.controllers', [])
           }
         // console.log($scope.allMarkers)
         })
-      }
+      };
 
       var AddDropOffMarker = function(data, title, iconURL){
                  
@@ -440,7 +432,7 @@ angular.module('starter.controllers', [])
           }
         // console.log($scope.allMarkers)
         })
-      }
+      };
 
 
       $scope.dropOffMarkers =[];
@@ -450,7 +442,7 @@ angular.module('starter.controllers', [])
           runDropOffMarker(indexDropoffs[num], "Drop off ticket", 'img/red-dot.png')
         }
       }).error(function(indexDropoffs){
-        console.log(indexDropoffs)
+        console.log(indexDropoffs);
       })
 
       PrivatePub.subscribe('/valet/new', function(data, channel) {
@@ -465,7 +457,7 @@ angular.module('starter.controllers', [])
       
 
     });
-  }
+  };
   navigator.geolocation.getCurrentPosition($scope.drawSelfMap);
   
 
@@ -487,18 +479,18 @@ angular.module('starter.controllers', [])
     }).error(function(response){
       console.log(response)
     })
-  }
+  };
 })
 
 .controller('OnRoutePickUpCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $rootScope, $state, PrivatePubServices, $window){
   nemSimpleLogger.doLog = true; //default is true
-  nemSimpleLogger.currentLevel = nemSimpleLogger.LEVELS.debug
+  nemSimpleLogger.currentLevel = nemSimpleLogger.LEVELS.debug;
 
   $scope.validateUser();
   $scope.myLocation = {
     lng : '',
     lat: ''
-  }
+  };
 
   $scope.pickUpMap = function(position){
 
@@ -521,7 +513,7 @@ angular.module('starter.controllers', [])
         } else{
           $scope.targetCarPark = tempTarget
         }
-      }
+      };
 
       var polylineSpecification = function(id, path, color){
         myPolyLine = {
@@ -542,7 +534,7 @@ angular.module('starter.controllers', [])
               repeat: '50px'
           }]
         }
-        return myPolyLine  
+        return myPolyLine;  
       };
 
       var createDirectionsService = function(destination, originLoc, destinationLoc){
@@ -554,7 +546,7 @@ angular.module('starter.controllers', [])
             origin : originLoc,
             destination : destinationLoc,
             travelMode : google.maps.TravelMode.DRIVING
-          }
+          };
 
           directionsService.route(request, function(response, status) {
           if (status == google.maps.DirectionsStatus.OK) {
@@ -573,7 +565,7 @@ angular.module('starter.controllers', [])
             origin : originLoc,
             destination : destinationLoc,
             travelMode : google.maps.TravelMode.WALKING
-          }
+          };
           directionsService.route(request, function(response, status) {
             if (status == google.maps.DirectionsStatus.OK) {
                 directionsDisplay.setDirections(response);
@@ -584,10 +576,10 @@ angular.module('starter.controllers', [])
               $scope.polylines = [polylineSpecification(999, $scope.path_coords, 'blue')]
               console.log($scope.polylines)
               
-            }              
+            };              
           });
-        }
-      }
+        };
+      };
 
       $scope.myLocation.lng = position.coords.longitude;
       $scope.myLocation.lat = position.coords.latitude;
@@ -614,58 +606,57 @@ angular.module('starter.controllers', [])
       };
 
       $scope.currentPickUp = JSON.parse($window.localStorage.getItem('current-pickup'))
-      console.log($scope.currentPickUp)
+      console.log($scope.currentPickUp);
 
 
       $scope.validateUser();
 
-      var targetLat = $scope.currentPickUp.source_location.latitude 
-      var targetLng = $scope.currentPickUp.source_location.longitude 
-      var selfLocation   = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
+      var targetLat = $scope.currentPickUp.source_location.latitude; 
+      var targetLng = $scope.currentPickUp.source_location.longitude; 
+      var selfLocation   = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude);
       
-      var targetDestination = new google.maps.LatLng(targetLat, targetLng) 
+      var targetDestination = new google.maps.LatLng(targetLat, targetLng); 
 
-      var targetCarParkLat  = $scope.currentPickUp.parking_location.latitude
-      var targetCarParkLng  = $scope.currentPickUp.parking_location.longitude
+      var targetCarParkLat  = $scope.currentPickUp.parking_location.latitude;
+      var targetCarParkLng  = $scope.currentPickUp.parking_location.longitude;
 
-      var carParkDestination = new google.maps.LatLng(targetCarParkLat, targetCarParkLng) 
+      var carParkDestination = new google.maps.LatLng(targetCarParkLat, targetCarParkLng); 
 
-      createTarget(targetLat, targetLng, 'img/blue-dot.png')
-      createDirectionsService("client", selfLocation, targetDestination)
+      createTarget(targetLat, targetLng, 'img/blue-dot.png');
+      createDirectionsService("client", selfLocation, targetDestination);
       
-      createTarget(targetCarParkLat, targetCarParkLng, 'img/parkinglot.png')
-      createDirectionsService("carpark", targetDestination, carParkDestination)
+      createTarget(targetCarParkLat, targetCarParkLng, 'img/parkinglot.png');
+      createDirectionsService("carpark", targetDestination, carParkDestination);
         
       
     })
 
-  }
+  };
   navigator.geolocation.getCurrentPosition($scope.pickUpMap); 
 
   $scope.parked = function(){
-    
-    var valetID = this.userDetail.valet_id_pick_up;
-    var requestID = this.userDetail.id
+    console.log(this)
+    var valetID = this.currentPickUp.valet_id_pick_up;
+    var requestID = this.currentPickUp.id;
 
-    var url = $scope.rootURL + "api/v1/valets/" + valetID + "/requests/" + requestID + "/car_parked"
+    var url = $scope.rootURL + "api/v1/valets/" + valetID + "/requests/" + requestID + "/car_parked";
     console.log(url)
 
     var data = {
       request: {
         bay_number: $scope.val
       }
-    }
+    };
 
     $http.put(url, data).success(function(response){
-      console.log(response)
-      $state.go('app.home')
-
+      console.log(response);
+      $state.go('app.home');
       
     }).error(function(response){
       console.log(response)
-      Alert('Issues. Please resubmit or contact HQ')
+      Alert('Issues. Please resubmit or contact HQ');
     })      
-  }
+  };
 })
 
 

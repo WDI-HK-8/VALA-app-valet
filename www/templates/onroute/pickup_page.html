@@ -73,7 +73,7 @@
         <img src = "http://placehold.it/100x100"><br>
         <p>Client: {{currentPickUp.user.name}}<br>
         Phone:{{currentPickUp.user.phone_number}}<br>
-        Car:{{currentPickUp.user.car.color}} ~ {{currentPickUp.user.car.make}} ~ {{currentPickUp.user.car.license_plate}}<br>
+        Car:{{currentPickUp.user.car.color}} {{" ~ " + currentPickUp.user.car.make}} {{" ~ " + currentPickUp.user.car.license_plate}}<br>
         Address: {{currentPickUp.source_location.address}}<br>
         Car Park: {{currentPickUp.parking_location.address}}<p>
       </div>

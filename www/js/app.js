@@ -89,7 +89,7 @@ var app = angular.module('starter', ['ionic', 'starter.controllers', 'ng-token-a
     }
   })
 
-    .state('app.support', {
+  .state('app.support', {
       url: '/support',
       views: {
         'menuContent': {
