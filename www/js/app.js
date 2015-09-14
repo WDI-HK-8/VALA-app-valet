@@ -113,7 +113,11 @@ var app = angular.module('starter', ['ionic', 'starter.controllers', 'ng-token-a
   $urlRouterProvider.otherwise('/app/landing');
 
   $authProvider.configure({
-    apiUrl: 'http://localhost:3000' ,
+    // @if ENV == 'DEVELOPMENT'
+    apiUrl: 'http://localhost:3000',
+    // @endif
+    // @if ENV == 'PRODUCTION'
+    apiUrl: 'http://vala-api.herokuapp.com',
       proxyIf:               function() { window.isOldIE() },
       signOutUrl:            '/valets/sign_out',
       emailSignInPath:       '/valets/sign_in',

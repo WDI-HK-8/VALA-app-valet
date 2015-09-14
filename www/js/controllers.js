@@ -2,7 +2,7 @@ angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, $auth, $ionicPopup, $window, $log, $state, $http, $rootScope) {
 
-  $scope.rootURL = "http://localhost:3000/";
+  $scope.rootURL = "http://vala-api.herokuapp.com/";
   
   $scope.validateUser = function(){
     $scope.currentUser = JSON.parse($window.localStorage.getItem('current-user'))
@@ -116,7 +116,7 @@ angular.module('starter.controllers', [])
         },
         options: {
             animation: google.maps.Animation.BOUNCE,
-            icon: 'http://labs.google.com/ridefinder/images/mm_20_black.png'            
+            icon: 'img/man.png'            
         }
       };
 
@@ -482,7 +482,7 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('OnRoutePickUpCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $rootScope, $state, PrivatePubServices, $window){
+.controller('OnRoutePickUpCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $rootScope, $state, PrivatePubServices, $window, $ionicPopup){
   nemSimpleLogger.doLog = true; //default is true
   nemSimpleLogger.currentLevel = nemSimpleLogger.LEVELS.debug;
 
@@ -637,7 +637,8 @@ angular.module('starter.controllers', [])
   $scope.parked = function(){
     console.log(this)
     var valetID = this.currentPickUp.valet_id_pick_up;
-    var requestID = this.currentPickUp.id;
+    var requestID = this.currentPickUp.request_id;
+    console.log($scope.currentPickUp)
 
     var url = $scope.rootURL + "api/v1/valets/" + valetID + "/requests/" + requestID + "/car_parked";
     console.log(url)
@@ -654,7 +655,10 @@ angular.module('starter.controllers', [])
       
     }).error(function(response){
       console.log(response)
-      Alert('Issues. Please resubmit or contact HQ');
+       $ionicPopup.alert({
+        title: 'Error',
+        template: 'Please contact HQ'
+      });
     })      
   };
 })
