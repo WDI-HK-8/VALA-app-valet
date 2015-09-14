@@ -63,19 +63,30 @@
 
   </ion-content>
 
+  <!-- legend -->
+  <div class="card">
+    <div class="item item-text-wrap legend">
+      <img src='img/blue-dot.png'> Client Location<br>
+      <img src='img/parkinglot.png'> Parking<br>
+      <span class="blue"> - </span> Walk route to client<br>
+      <span class="green"> - </span> Drive route to carpark<br>
+
+    </div>
+  </div>
+
   <!-- card show -->
   <div style="position: absolute; bottom: 0px; width: 100%">
-    <div class="card" id="currentPickUp" ng-cloak >
+    <div class="card" id="currentTicket" ng-cloak >
       <div class="item item-divider" >
-        AUTH CODE : {{currentPickUp.auth_code}}
+        AUTH CODE : {{currentTicket.auth_code}}
       </div>
       <div class="userDetails item item-text-wrap">
         <img src = "http://placehold.it/100x100"><br>
-        <p>Client: {{currentPickUp.user.name}}<br>
-        Phone:{{currentPickUp.user.phone_number}}<br>
-        Car:{{currentPickUp.user.car.color}} {{" ~ " + currentPickUp.user.car.make}} {{" ~ " + currentPickUp.user.car.license_plate}}<br>
-        Address: {{currentPickUp.source_location.address}}<br>
-        Car Park: {{currentPickUp.parking_location.address}}<p>
+        <p>Client: {{currentTicket.user.name}}<br>
+        Phone:{{currentTicket.user.phone_number}}<br>
+        Car:{{currentTicket.user.car.color}} {{" ~ " + currentTicket.user.car.make}} {{" ~ " + currentTicket.user.car.license_plate}}<br>
+        Address: {{currentTicket.source_location.address}}<br>
+        Car Park: {{currentTicket.parking_location.address}}<p>
       </div>
       <div class="bayNumberSubmit item item-divider">
         <div class="list">
