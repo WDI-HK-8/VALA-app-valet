@@ -3,7 +3,7 @@ angular.module('starter.controllers', [])
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, $auth, $ionicPopup, $window, $log, $state, $http, $rootScope) {
 
   $scope.rootURL = "http://vala-api.herokuapp.com/";
-  
+
   $scope.validateUser = function(){
     $scope.currentUser = JSON.parse($window.localStorage.getItem('current-user'))
   };
@@ -13,16 +13,16 @@ angular.module('starter.controllers', [])
 
   // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
-    
+
     $auth.submitLogin($scope.loginData).then(function(response){
       $window.localStorage.setItem('current-user', JSON.stringify(response));
       $scope.validateUser();
-      
+
       $state.go('app.home');
 
       var valetID = response.id;
       var url = $scope.rootURL + "api/v1/valets/" + valetID;
-      
+
       var data = {
         valet: {
           status: 'available'
@@ -30,13 +30,13 @@ angular.module('starter.controllers', [])
       };
 
       $http.patch(url, data).success(function(change_status){
-       
+
       }).error(function(change_status){
-        console.log(change_status);        
+        console.log(change_status);
       })
- 
+
     }).catch(function(response){
-      
+
       $ionicPopup.alert({
         title: 'Wrong password',
         template: 'Try again'
@@ -51,7 +51,7 @@ angular.module('starter.controllers', [])
     $auth.submitRegistration($scope.registrationForm).then(function(response){
       $window.localStorage.setItem('current-user', JSON.stringify(response.data.data));
       $scope.validateUser();
- 
+
       $state.go('app.home');
 
     }).catch(function(response){
@@ -69,12 +69,12 @@ angular.module('starter.controllers', [])
   $scope.validateUser();
   var valetID = $scope.currentUser.id;
   var url = $scope.rootURL + "api/v1/valets/" + valetID;
-  
+
   $http.get(url).success(function(response){
-    
+
     $scope.valetInfo = response;
   }).error(function(response){
-    
+
   })
 
 })
@@ -83,7 +83,7 @@ angular.module('starter.controllers', [])
   nemSimpleLogger.doLog = true; //default is true
   nemSimpleLogger.currentLevel = nemSimpleLogger.LEVELS.debug
 
-  
+
   $scope.myLocation = {
     lng : '',
     lat: ''
@@ -92,21 +92,12 @@ angular.module('starter.controllers', [])
   PrivatePubServices.subscribe('/valet/new');
   PrivatePubServices.logMessages('/valet/new');
 
-  $scope.drawSelfMap = function(position) { 
+  $scope.drawSelfMap = function(position) {
     //$scope.$apply is needed to trigger the digest cycle when the geolocation arrives and to update all the watchers
     $scope.$apply(function() {
       $scope.validateUser();
       $scope.myLocation.lng = position.coords.longitude;
       $scope.myLocation.lat = position.coords.latitude;
- 
-      $scope.map = {
-        center: {
-          latitude: $scope.myLocation.lat,
-          longitude: $scope.myLocation.lng
-        },
-        zoom: 15,
-        pan: 2
-      };
 
       $scope.marker = {
         id: "you",
@@ -116,7 +107,7 @@ angular.module('starter.controllers', [])
         },
         options: {
             animation: google.maps.Animation.BOUNCE,
-            icon: 'img/man.png'            
+            icon: 'img/man.png'
         }
       };
 
@@ -131,17 +122,17 @@ angular.module('starter.controllers', [])
           origin : originLoc,
           destination : destinationLoc,
           travelMode : mode
-        };      
-                
+        };
+
         directionsService.route(request, function(response, status) {
           if (status == google.maps.DirectionsStatus.OK) {
               directionsDisplay.setDirections(response);
-          
+
             $scope.path_coords = response.routes[0].overview_path
             $scope.polylines = [
               {
                 id: 888,
-                path: $scope.path_coords, 
+                path: $scope.path_coords,
                 stroke: {
                     color: 'blue',
                     weight: 2
@@ -158,7 +149,7 @@ angular.module('starter.controllers', [])
                 }]
               }
             ];
-          }              
+          }
         });
       };
 
@@ -168,7 +159,7 @@ angular.module('starter.controllers', [])
           id:           id,
           name:         userName,
           picture:      userPic,
-          transmission: transmission, 
+          transmission: transmission,
           phone:        userPhoneNum,
           latitude:     latitude,
           longitude:    longitude,
@@ -179,10 +170,10 @@ angular.module('starter.controllers', [])
           show:         false,
           clickPin: function() {
             $scope.currentLocation = this
-            console.log(this)       
+            console.log(this)
             $scope.selfLocation   = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
-            $scope.destination    = new google.maps.LatLng(this.latitude, this.longitude) 
-            
+            $scope.destination    = new google.maps.LatLng(this.latitude, this.longitude)
+
             createDirectionsService($scope.selfLocation, $scope.destination, google.maps.TravelMode.WALKING)
           }
         }
@@ -208,7 +199,7 @@ angular.module('starter.controllers', [])
           id:           id,
           name:         userName,
           picture:      userPic,
-          transmission: transmission, 
+          transmission: transmission,
           phone:        userPhoneNum,
           p_latitude:   p_latitude,
           p_longitude:  p_longitude,
@@ -222,10 +213,10 @@ angular.module('starter.controllers', [])
           show:         false,
           clickPin: function() {
             $scope.currentLocation = this
-            console.log(this)       
+            console.log(this)
             $scope.parkLocation   = new google.maps.LatLng(this.p_latitude, this.p_longitude)
-            $scope.destination    = new google.maps.LatLng(this.latitude, this.longitude) 
-            
+            $scope.destination    = new google.maps.LatLng(this.latitude, this.longitude)
+
             createDirectionsService($scope.parkLocation, $scope.destination, google.maps.TravelMode.DRIVING)
 
             createCarParkMarker("Car Park", p_latitude, p_longitude, p_address, 'img/parkinglot.png')
@@ -235,10 +226,10 @@ angular.module('starter.controllers', [])
 
 
       var runPickUpMarker = function(indexElement, title, iconURL){
-                 
+
         var title           = title
         var user            = indexElement.user;
-        var sourceLocation  = indexElement.source_location; 
+        var sourceLocation  = indexElement.source_location;
         var id              = indexElement.id;
 
         var userName        = user.name;
@@ -249,7 +240,7 @@ angular.module('starter.controllers', [])
         var address         = sourceLocation.address;
         var latitude        = sourceLocation.latitude;
         var longitude       = sourceLocation.longitude;
-        
+
         var myCurLoc        = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
         var myDestination   = new google.maps.LatLng(latitude, longitude)
         var iconURL         = iconURL
@@ -258,13 +249,13 @@ angular.module('starter.controllers', [])
         var timeEST
 
         var matrixService   = new google.maps.DistanceMatrixService();
-        
+
         var durationDistance = {
           origins:      [myCurLoc],
           destinations: [myDestination],
           travelMode : google.maps.TravelMode.WALKING
         }
-         
+
         matrixService.getDistanceMatrix(durationDistance, function(responseD, status){
           if (status == google.maps.DistanceMatrixStatus.OK){
             distanceEST = responseD.rows[0].elements[0].distance.text;
@@ -279,13 +270,13 @@ angular.module('starter.controllers', [])
       };
 
       var runDropOffMarker = function(indexElement, title, iconURL){
-                 
+
         var title                 = title
         var user                  = indexElement.user;
         var parkingLocation       = indexElement.parking_location;
-        var destinationLocation   = indexElement.destination_location; 
+        var destinationLocation   = indexElement.destination_location;
         var id                    = indexElement.id;
-        
+
 
         var userName              = user.name;
         var userPic               = user.profile_picture;
@@ -310,14 +301,14 @@ angular.module('starter.controllers', [])
 
 
         var matrixService   = new google.maps.DistanceMatrixService();
-        
+
         //checking how to implement two way points
         var durationDistance = {
           origins:      [myCarPark],
           destinations: [myDestination],
-          travelMode : google.maps.TravelMode.DRIVING 
+          travelMode : google.maps.TravelMode.DRIVING
         }
-         
+
         matrixService.getDistanceMatrix(durationDistance, function(responseD, status){
           if (status == google.maps.DistanceMatrixStatus.OK){
             distanceEST = responseD.rows[0].elements[0].distance.text;
@@ -335,13 +326,13 @@ angular.module('starter.controllers', [])
       for (var num = 0; num < indexPickups.length; num++){
         runPickUpMarker(indexPickups[num],"Pick up ticket", 'img/blue-dot.png');
       };
-      
+
       }).error(function(indexPickups){
         console.log(indexPickups);
       })
-    
+
       var AddPickUpMarker = function(data, title, iconURL){
-                 
+
         var title           = title
         var request         = data.request;
 
@@ -354,7 +345,7 @@ angular.module('starter.controllers', [])
         var address         = request.location;
         var latitude        = request.latitude;
         var longitude       = request.longitude;
-        
+
         var myCurLoc        = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
         var myDestination   = new google.maps.LatLng(latitude, longitude)
         var iconURL         = iconURL
@@ -363,13 +354,13 @@ angular.module('starter.controllers', [])
         var timeEST
 
         var matrixService   = new google.maps.DistanceMatrixService();
-        
+
         var durationDistance = {
           origins:      [myCurLoc],
           destinations: [myDestination],
           travelMode : google.maps.TravelMode.WALKING
         }
-         
+
         matrixService.getDistanceMatrix(durationDistance, function(responseD, status){
           if (status == google.maps.DistanceMatrixStatus.OK){
             distanceEST = responseD.rows[0].elements[0].distance.text;
@@ -386,7 +377,7 @@ angular.module('starter.controllers', [])
       };
 
       var AddDropOffMarker = function(data, title, iconURL){
-                 
+
         var title           = title
         var request         = data.request;
 
@@ -402,8 +393,8 @@ angular.module('starter.controllers', [])
 
         var p_address         = request.location;
         var p_latitude        = request.latitude;
-        var p_longitude       = request.longitude;        
-        
+        var p_longitude       = request.longitude;
+
         var parkLocation   = new google.maps.LatLng(p_latitude, p_longitude)
         var myDestination     = new google.maps.LatLng(latitude, longitude)
         var iconURL           = iconURL
@@ -412,13 +403,13 @@ angular.module('starter.controllers', [])
         var timeEST
 
         var matrixService   = new google.maps.DistanceMatrixService();
-        
+
         var durationDistance = {
           origins:      [parkLocation],
           destinations: [myDestination],
           travelMode : google.maps.TravelMode.DRIVING
         }
-         
+
         matrixService.getDistanceMatrix(durationDistance, function(responseD, status){
           if (status == google.maps.DistanceMatrixStatus.OK){
             distanceEST = responseD.rows[0].elements[0].distance.text;
@@ -439,33 +430,43 @@ angular.module('starter.controllers', [])
 
       $http.get($scope.rootURL + "api/v1/requests/dropoff").success(function(indexDropoffs){
         for (var num = 0; num < indexDropoffs.length; num++){
-          runDropOffMarker(indexDropoffs[num], "Drop off ticket", 'img/red-dot.png')
+          runDropOffMarker(indexDropoffs[num], "Drop off ticket", 'img/red-dot.png');
         }
+
+        $scope.map = {
+          center: {
+            latitude: $scope.myLocation.lat,
+            longitude: $scope.myLocation.lng
+          },
+          zoom: 15,
+          pan: 2
+        };
       }).error(function(indexDropoffs){
         console.log(indexDropoffs);
       })
 
       PrivatePub.subscribe('/valet/new', function(data, channel) {
         console.log(data);
-        
+
         if (data.request.type == 'pick_up'){
           AddPickUpMarker(data, "Pick up ticket", 'img/blue-dot.png')
         } else{
           AddDropOffMarker(data, "Drop off ticket", 'img/red-dot.png')
         }
       });
-      
+
 
     });
   };
+
   navigator.geolocation.getCurrentPosition($scope.drawSelfMap);
-  
+
 
 
   $scope.valetReply = function(){
     var valetID = $scope.currentUser.id;
     var requestID = this.currentLocation.id
-    
+
     var url = $scope.rootURL + "api/v1/valets/" + valetID + "/requests/" + requestID + "/valet_pick_up"
 
     $http.patch(url).success(function(response){
@@ -495,7 +496,7 @@ angular.module('starter.controllers', [])
   $scope.pickUpMap = function(position){
 
     $scope.$apply(function() {
-      
+
       var createTarget = function(targetLat, targetLng, iconURL){
         tempTarget = {
           id: "Target",
@@ -505,11 +506,11 @@ angular.module('starter.controllers', [])
           },
           options: {
             animation: google.maps.Animation.DROP,
-            icon: iconURL            
+            icon: iconURL
           }
         };
         if(tempTarget.options.icon =='img/blue-dot.png'){
-          $scope.targetMarker = tempTarget 
+          $scope.targetMarker = tempTarget
         } else{
           $scope.targetCarPark = tempTarget
         }
@@ -518,7 +519,7 @@ angular.module('starter.controllers', [])
       var polylineSpecification = function(id, path, color){
         myPolyLine = {
           id: id,
-          path: path, 
+          path: path,
           stroke: {
               color: color,
               weight: 2
@@ -534,7 +535,7 @@ angular.module('starter.controllers', [])
               repeat: '50px'
           }]
         }
-        return myPolyLine;  
+        return myPolyLine;
       };
 
       var createDirectionsService = function(destination, originLoc, destinationLoc){
@@ -553,11 +554,11 @@ angular.module('starter.controllers', [])
               directionsDisplay.setDirections(response);
               $scope.path_coords = response.routes[0].overview_path
               var myPolyLine ={};
-              
+
               $scope.polylines_park = [polylineSpecification(888, $scope.path_coords, 'green')]
               console.log($scope.polylines_park)
 
-          }              
+          }
         });
 
         } else {
@@ -572,11 +573,11 @@ angular.module('starter.controllers', [])
             console.log(response)
               $scope.path_coords = response.routes[0].overview_path
               var myPolyLine ={};
-              
+
               $scope.polylines = [polylineSpecification(999, $scope.path_coords, 'blue')]
               console.log($scope.polylines)
-              
-            };              
+
+            };
           });
         };
       };
@@ -601,7 +602,7 @@ angular.module('starter.controllers', [])
         },
         options: {
             animation: google.maps.Animation.BOUNCE,
-            icon: 'img/man.png'            
+            icon: 'img/man.png'
         }
       };
 
@@ -611,28 +612,28 @@ angular.module('starter.controllers', [])
 
       $scope.validateUser();
 
-      var targetLat = $scope.currentPickUp.source_location.latitude; 
-      var targetLng = $scope.currentPickUp.source_location.longitude; 
+      var targetLat = $scope.currentPickUp.source_location.latitude;
+      var targetLng = $scope.currentPickUp.source_location.longitude;
       var selfLocation   = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude);
-      
-      var targetDestination = new google.maps.LatLng(targetLat, targetLng); 
+
+      var targetDestination = new google.maps.LatLng(targetLat, targetLng);
 
       var targetCarParkLat  = $scope.currentPickUp.parking_location.latitude;
       var targetCarParkLng  = $scope.currentPickUp.parking_location.longitude;
 
-      var carParkDestination = new google.maps.LatLng(targetCarParkLat, targetCarParkLng); 
+      var carParkDestination = new google.maps.LatLng(targetCarParkLat, targetCarParkLng);
 
       createTarget(targetLat, targetLng, 'img/blue-dot.png');
       createDirectionsService("client", selfLocation, targetDestination);
-      
+
       createTarget(targetCarParkLat, targetCarParkLng, 'img/parkinglot.png');
       createDirectionsService("carpark", targetDestination, carParkDestination);
-        
-      
+
+
     })
 
   };
-  navigator.geolocation.getCurrentPosition($scope.pickUpMap); 
+  navigator.geolocation.getCurrentPosition($scope.pickUpMap);
 
   $scope.parked = function(){
     console.log(this)
@@ -652,14 +653,14 @@ angular.module('starter.controllers', [])
     $http.put(url, data).success(function(response){
       console.log(response);
       $state.go('app.home');
-      
+
     }).error(function(response){
       console.log(response)
        $ionicPopup.alert({
         title: 'Error',
         template: 'Please contact HQ'
       });
-    })      
+    })
   };
 })
 
