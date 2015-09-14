@@ -92,6 +92,25 @@
 }
 
 .userDetailsDropOff {
-  height: 190px;
+  height: 200px;
   width: 280px;
+}
+
+.codeSubmit{
+  height: 60px;
+}
+
+.codeSubmit span  {
+  font-family: 'Helvetica Neue', Roboto, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  font-color: rgb(102,102,102);
+}
+
+.codeSubmit label  {
+  width: 250px;
+  height: 30px;
+}
+
+.codeSubmit button{
+  margin-top: -50px;
 }

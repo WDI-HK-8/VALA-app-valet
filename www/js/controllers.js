@@ -387,13 +387,13 @@ angular.module('starter.controllers', [])
         var transmission    = request.transmission;
         var userPhoneNum    = request.phone;
 
-        var address         = request.location;
-        var latitude        = request.latitude;
-        var longitude       = request.longitude;
+        var address         = request.destination_location;
+        var latitude        = request.destination_latitude;
+        var longitude       = request.destination_longitude;
 
-        var p_address         = request.location;
-        var p_latitude        = request.latitude;
-        var p_longitude       = request.longitude;
+        var p_address         = request.parking_location_location;
+        var p_latitude        = request.parking_location_latitude;
+        var p_longitude       = request.parking_location_longitude;
 
         var parkLocation   = new google.maps.LatLng(p_latitude, p_longitude)
         var myDestination     = new google.maps.LatLng(latitude, longitude)
@@ -484,7 +484,7 @@ angular.module('starter.controllers', [])
   $scope.valetReplyDrop = function(){
     console.log('drop off ticket accept')
     var valetID = $scope.currentUser.id;
-    var requestID = this.currentLocation.id
+    var requestID = this.currentLocation.id;
 
     var url = $scope.rootURL + "api/v1/valets/" + valetID + "/requests/" + requestID + "/valet_drop_off"
 
@@ -838,11 +838,52 @@ angular.module('starter.controllers', [])
   };
   navigator.geolocation.getCurrentPosition($scope.dropOffMap);
 
-  $scope.completed = function(){
-    console.log(this)
-    $state.go('app.home');
+  $scope.leaving = function(){
     
+    var valetID = $scope.currentUser.id;
+    var requestID = this.currentTicket.request_id;
+
+    var url = $scope.rootURL + "api/v1/valets/" + valetID + "/requests/" + requestID + "/valet_delivery"
+
+    $http.patch(url).success(function(response){
+      $scope.inTransit = response;
+      console.log($scope.inTransit)
+    }).error(function(response){
+      console.log(response)
+    })
   };
+
+  $scope.verify = function(){
+    var valetID = $scope.currentUser.id;
+    var requestID = this.currentTicket.request_id;
+    var url = $scope.rootURL + "api/v1/valets/" + valetID + "/requests/" + requestID + "/car_drop_off";
+    console.log(url)
+
+    var data = {
+      request: {
+        auth_code: $scope.code
+      }
+    };
+
+    $http.put(url, data).success(function(response){
+      console.log(response);
+      $state.go('app.home');
+
+    }).error(function(response){
+      console.log(response)
+       $ionicPopup.alert({
+        title: 'Error',
+        template: 'Auth Code incorrect. If in doubt, please call HQ immediately'
+      });
+    })
+
+
+
+  }
+
+
+
+
 })
 
 
