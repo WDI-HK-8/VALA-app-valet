@@ -3,6 +3,32 @@
   height: 700px; 
 }
 
+.legend{
+  margin-top: 80px;
+  float: right;
+  width: 200px;
+  position: relative;
+  font-size: 13px;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.legend img{
+  height: 13px;
+}
+
+.legend .blue{
+  font-size: 30px;
+  color: blue;
+  font-weight: bold;
+}
+
+.legend .green{
+  font-size: 30px;
+  color: green;
+  font-weight: bold;
+}
+
+
 .tabs .row {
   margin-top: -5px;
   margin-bottom: -10px;
@@ -49,5 +75,42 @@
 }
 
 .bayNumberSubmit button{
+  margin-top: -50px;
+}
+
+.userDetailsDropOff p {
+  margin-top: -25px;
+  margin-left: 10px;
+  position: absolute;
+  display: block;
+  
+}
+.userDetailsDropOff img {
+  margin-left: 280px;
+  position: absolute;
+  display: block;
+}
+
+.userDetailsDropOff {
+  height: 200px;
+  width: 280px;
+}
+
+.codeSubmit{
+  height: 60px;
+}
+
+.codeSubmit span  {
+  font-family: 'Helvetica Neue', Roboto, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  font-color: rgb(102,102,102);
+}
+
+.codeSubmit label  {
+  width: 250px;
+  height: 30px;
+}
+
+.codeSubmit button{
   margin-top: -50px;
 }

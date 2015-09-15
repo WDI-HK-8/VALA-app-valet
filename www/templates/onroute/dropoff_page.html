@@ -1,0 +1,129 @@
+<ion-view cache-view="false" view-title="Drop Off On Route" > 
+
+  <ion-content data-tap-disabled="true">
+
+    <ui-gmap-google-map 
+      center='map.center' 
+      zoom='map.zoom' 
+      events="map.markersEvents"
+      draggable="true" 
+      options="options" 
+      bounds="map.bounds">
+      
+        <ui-gmap-marker 
+          coords="marker.coords" 
+          options="marker.options" 
+          events="marker.events" 
+          idkey="marker.id" >
+        </ui-gmap-marker>
+
+        <ui-gmap-marker 
+          coords="targetMarker.coords" 
+          options="targetMarker.options" 
+          events="targetMarker.events" 
+          click = "createDirectionsService(this)"
+          idkey="1" >
+        </ui-gmap-marker>
+
+        <ui-gmap-marker 
+          coords="targetCarPark.coords" 
+          options="targetCarPark.options" 
+          events="targetCarPark.events" 
+          click = "createDirectionsService(this)"
+          idkey="2" >
+        </ui-gmap-marker>
+
+        <ui-gmap-polyline 
+          ng-repeat="p in polylines" 
+          path="p.path" 
+          stroke="p.stroke" 
+          visible='p.visible'
+          geodesic='p.geodesic'
+          static="true" 
+          fit="false" 
+          editable="p.editable" 
+          draggable="p.draggable" 
+          icons="p.icons">
+        </ui-gmap-polyline>
+
+        <ui-gmap-polyline 
+          ng-repeat="p in polylines_park" 
+          path="p.path" 
+          stroke="p.stroke" 
+          visible='p.visible'
+          geodesic='p.geodesic'
+          static="true" 
+          fit="false" 
+          editable="p.editable" 
+          draggable="p.draggable" 
+          icons="p.icons">
+        </ui-gmap-polyline>
+    </ui-gmap-google-map>
+
+
+  </ion-content>
+
+  <!-- legend -->
+  <div class="card">
+    <div class="item item-text-wrap legend">
+      <img src='img/blue-dot.png'> Client Location<br>
+      <img src='img/parkinglot.png'> Parking<br>
+      <span class="blue"> - </span> Drive route to client<br>
+      <span class="green"> - </span> Walk route to carpark<br>
+
+    </div>
+  </div>
+
+  <!-- card show when begin delivery-->
+  <div style="position: absolute; bottom: 0px; width: 100%">
+    <div class="card" id="currentTicket" ng-hide="inTransit.status == 'in_transit_drop_off'" ng-cloak >
+      <div class="item item-divider" >
+        Drop off ticket : {{currentTicket.request_id}}
+      </div>
+
+      <div class="userDetailsDropOff item item-text-wrap">
+        <img src = "http://placehold.it/100x100"><br>
+        <p>Client: {{currentTicket.user.name}}<br>
+        Phone:{{currentTicket.user.phone_number}}<br>
+        Car: {{currentTicket.user.car.color}} {{" ~ " + currentTicket.user.car.make}} {{" ~ " + currentTicket.user.car.license_plate}}<br>
+        Car Park | Bay: {{currentTicket.parking_location.address}} | No. {{currentTicket.parking_location.bay_number}}<br>
+
+        Client Address: {{currentTicket.destination_location.address}}<br>
+        Car Park: {{currentTicket.parking_location.address}}</p>
+      </div>
+
+      <button class="button button-small button-balanced buttonDetail" ng-click="leaving()">Leaving Carpark</button>
+    </div>
+  </div>
+  
+  <div style="position: absolute; bottom: 0px; width: 100%">
+    <div class="card" id="currentTicket" ng-show="inTransit.status == 'in_transit_drop_off'" ng-cloak >
+      <div class="item item-divider" >
+        Drop off ticket : {{currentTicket.request_id}}
+      </div>
+
+      <div class="userDetailsDropOff item item-text-wrap">
+        <img src = "http://placehold.it/100x100"><br>
+        <p>Client: {{currentTicket.user.name}}<br>
+        Phone:{{currentTicket.user.phone_number}}<br>
+        Car: {{currentTicket.user.car.color}} {{" ~ " + currentTicket.user.car.make}} {{" ~ " + currentTicket.user.car.license_plate}}<br>
+        Car Park | Bay: {{currentTicket.parking_location.address}} | No. {{currentTicket.parking_location.bay_number}}<br>
+
+        Client Address: {{currentTicket.destination_location.address}}<br>
+        Car Park: {{currentTicket.parking_location.address}}<p>
+      </div>
+
+      <div class="codeSubmit item item-divider">
+        <div class="list">
+          <label class="item item-input">
+            <span class="input-label">AUTH CODE:</span>
+            <input type="text" ng-model="code">
+          </label>
+        </div>
+
+        <button class="button button-small button-balanced buttonDetail"ng-click="verify()" >Verify</button>
+      </div>
+    </div>
+  </div>
+
+</ion-view>

@@ -89,6 +89,16 @@ var app = angular.module('starter', ['ionic', 'starter.controllers', 'ng-token-a
     }
   })
 
+  .state('app.dropoff', { 
+    url: '/dropoff',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/onroute/dropoff_page.html',
+        controller: 'OnRouteDropOffCtrl'
+      }
+    }
+  })
+
   .state('app.support', {
       url: '/support',
       views: {

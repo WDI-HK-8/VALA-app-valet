@@ -11,38 +11,39 @@
         
         <label class="item item-input">
           <span class="input-label">First name</span>
-          <input type="text" ng-model="registrationForm.first_name">
+          <input type="text" placeholder="e.g. John" ng-model="registrationForm.first_name">
         </label>  
 
         <label class="item item-input">
           <span class="input-label">Last name</span>
-          <input type="text" ng-model="registrationForm.last_name">
+          <input type="text" placeholder="e.g. Best" ng-model="registrationForm.last_name">
         </label>      
 
         <label class="item item-input">
           <span class="input-label">Phone number</span>
-          <input type="text" ng-model="registrationForm.phone_number">
+          <input type="text" placeholder="e.g. 12341234" ng-model="registrationForm.phone_number">
         </label>
 
         <label class="item item-input">
           <span class="input-label">HKID</span>
-          <input type="text" ng-model="registrationForm.HKID">
+          <input type="text" placeholder="e.g. A123098(4)" ng-model="registrationForm.HKID">
         </label>
 
         <label class="item item-input">
           <span class="input-label">Driver license expiry date</span>
-          <input type="text" ng-model="registrationForm.driver_license_expiry_date">
+          <input type="date" ng-model="registrationForm.driver_license_expiry_date">
         </label>
 
         <label class="item item-input">
           <span class="input-label">Driving experience</span>
-          <input type="text" ng-model="registrationForm.years_of_driving">
+          <input type="number" placeholder="2" ng-model="registrationForm.years_of_driving">
+          <span class="input-label"> years</span>
         </label>
 
 
         <label class="item item-input">
-          <span class="input-label">Manual?</span>
-          <input type="text" ng-model="registrationForm.manual">
+          <span class="input-label">Manual? (True/False)</span>
+          <input type="text" placeholder="e.g. True" ng-model="registrationForm.manual">
         </label>
 
         <label class="item item-input">
