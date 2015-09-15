@@ -185,7 +185,7 @@ angular.module('starter.controllers', [])
             $scope.selfLocation   = new google.maps.LatLng($scope.marker.coords.latitude, $scope.marker.coords.longitude)
             $scope.destination    = new google.maps.LatLng(this.latitude, this.longitude)
 
-            createDirectionsService($scope.selfLocation, $scope.destination, google.maps.TravelMode.WALKING);
+            createDirectionsService($scope.selfLocation, $scope.destination, google.maps.TravelMode.WALKING)
           }
         }
       };
@@ -225,13 +225,12 @@ angular.module('starter.controllers', [])
           clickPin: function() {
             $scope.currentLocation = this
             console.log(this)
-            
             $scope.parkLocation   = new google.maps.LatLng(this.p_latitude, this.p_longitude)
             $scope.destination    = new google.maps.LatLng(this.latitude, this.longitude)
 
-            createDirectionsService($scope.parkLocation, $scope.destination, google.maps.TravelMode.DRIVING);
+            createDirectionsService($scope.parkLocation, $scope.destination, google.maps.TravelMode.DRIVING)
 
-            createCarParkMarker("Car Park", p_latitude, p_longitude, p_address, 'img/parkinglot.png');
+            createCarParkMarker("Car Park", p_latitude, p_longitude, p_address, 'img/parkinglot.png')
           }
         }
       };
@@ -441,6 +440,7 @@ angular.module('starter.controllers', [])
       $scope.dropOffMarkers =[];
 
       PrivatePub.subscribe('/valet/new', function(data, channel) {
+        console.log(data);
 
         if (data.request.type == 'pick_up'){
           AddPickUpMarker(data, "Pick up ticket", 'img/blue-dot.png')
@@ -462,10 +462,11 @@ angular.module('starter.controllers', [])
           zoom: 14,
           pan: 3
         };
-
       }).error(function(indexDropoffs){
         console.log(indexDropoffs);
       })
+
+
 
     });
   };
@@ -722,7 +723,7 @@ angular.module('starter.controllers', [])
             icon: iconURL
           }
         };
-        if(tempTarget.options.icon =='img/red-dot.png'){
+        if(tempTarget.options.icon =='img/blue-dot.png'){
           $scope.targetMarker = tempTarget
         } else{
           $scope.targetCarPark = tempTarget
@@ -828,7 +829,7 @@ angular.module('starter.controllers', [])
 
       var carParkDestination = new google.maps.LatLng(targetCarParkLat, targetCarParkLng);
 
-      createTarget(targetLat, targetLng, 'img/red-dot.png');
+      createTarget(targetLat, targetLng, 'img/blue-dot.png');
       createDirectionsService("client", carParkDestination, targetDestination);
 
       createTarget(targetCarParkLat, targetCarParkLng, 'img/parkinglot.png');

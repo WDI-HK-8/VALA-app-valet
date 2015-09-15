@@ -61,10 +61,10 @@
 <!-- card show -->
   <div style="position: absolute; bottom: 0px; width: 100%">
     <div class="card" id="currentLocation" ng-cloak ng-show="currentLocation.title == 'Pick up ticket'  ">
-      <div class="item item-divider" >
+      <div class="item item-divider topDivPickUp" >
         {{currentLocation.title}} : {{currentLocation.id}}
       </div>
-      <div class="item item-text-wrap">
+      <div class="item item-text-wrap userDetailAtHome">
         Client: {{currentLocation.name}}<br>
         Transmission: {{currentLocation.transmission}}<br>
         Phone: {{currentLocation.phone}}<br>
@@ -78,10 +78,10 @@
 
   <div style="position: absolute; bottom: 0px; width: 100%">
     <div class="card" id="currentLocation" ng-cloak ng-show="currentLocation.title == 'Drop off ticket'  ">
-      <div class="item item-divider" >
+      <div class="item item-divider topDivDropOff" >
         {{currentLocation.title}} : {{currentLocation.id}}
       </div>
-      <div class="item item-text-wrap">
+      <div class="item item-text-wrap userDetailAtHome">
         Client: {{currentLocation.name}}<br>
         Transmission: {{currentLocation.transmission}}<br>
         Phone: {{currentLocation.phone}}<br>

@@ -105,13 +105,13 @@
   
 }
 .userDetailsDropOff img {
-  margin-left: 220px;
+  margin-left: 250px;
   position: absolute;
   display: block;
 }
 
 .userDetailsDropOff {
-  height: 220px;
+  height: 200px;
   width: 210px;
 }
 
@@ -132,10 +132,4 @@
 
 .codeSubmit button{
   margin-top: -50px;
-}
-
-.codeSubmit label  {
-  width: 180px;
-  height: 26px;
-  font-size: 13px;
 }
