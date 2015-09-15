@@ -79,9 +79,20 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $state, $rootScope, PrivatePubServices, $window){
+.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $state, $rootScope, PrivatePubServices, $window, $cordovaGeolocation){
   nemSimpleLogger.doLog = true; //default is true
   nemSimpleLogger.currentLevel = nemSimpleLogger.LEVELS.debug
+
+  var posOptions = {timeout: 10000, enableHighAccuracy: false};
+  $cordovaGeolocation
+    .getCurrentPosition(posOptions)
+    .then(function (position) {
+      var lat  = position.coords.latitude
+      var long = position.coords.longitude
+      console.log(lat + long)
+    }, function(err) {
+      // error
+    });
 
 
   $scope.myLocation = {
