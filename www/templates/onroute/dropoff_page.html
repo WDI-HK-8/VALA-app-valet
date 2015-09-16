@@ -40,7 +40,7 @@
           visible='p.visible'
           geodesic='p.geodesic'
           static="true" 
-          fit="false" 
+          fit="true" 
           editable="p.editable" 
           draggable="p.draggable" 
           icons="p.icons">
@@ -53,7 +53,7 @@
           visible='p.visible'
           geodesic='p.geodesic'
           static="true" 
-          fit="false" 
+          fit="true" 
           editable="p.editable" 
           draggable="p.draggable" 
           icons="p.icons">
@@ -66,7 +66,7 @@
   <!-- legend -->
   <div class="card">
     <div class="item item-text-wrap legend">
-      <img src='img/blue-dot.png'> Client Location<br>
+      <img src='img/red-dot.png'> Client Location<br>
       <img src='img/parkinglot.png'> Parking<br>
       <span class="blue"> - </span> Drive route to client<br>
       <span class="green"> - </span> Walk route to carpark<br>
@@ -77,14 +77,14 @@
   <!-- card show when begin delivery-->
   <div style="position: absolute; bottom: 0px; width: 100%">
     <div class="card" id="currentTicket" ng-hide="inTransit.status == 'in_transit_drop_off'" ng-cloak >
-      <div class="item item-divider" >
+      <div class="item item-divider topDivDropOff" >
         Drop off ticket : {{currentTicket.request_id}}
       </div>
 
       <div class="userDetailsDropOff item item-text-wrap">
         <img src = "http://placehold.it/100x100"><br>
         <p>Client: {{currentTicket.user.name}}<br>
-        Phone:{{currentTicket.user.phone_number}}<br>
+        Phone: <a href="tel:+852{{currentTicket.user.phone_number}}">{{currentTicket.user.phone_number}}</a><br>
         Car: {{currentTicket.user.car.color}} {{" ~ " + currentTicket.user.car.make}} {{" ~ " + currentTicket.user.car.license_plate}}<br>
         Car Park | Bay: {{currentTicket.parking_location.address}} | No. {{currentTicket.parking_location.bay_number}}<br>
 
@@ -98,14 +98,14 @@
   
   <div style="position: absolute; bottom: 0px; width: 100%">
     <div class="card" id="currentTicket" ng-show="inTransit.status == 'in_transit_drop_off'" ng-cloak >
-      <div class="item item-divider" >
+      <div class="item item-divider topDivDropOff" >
         Drop off ticket : {{currentTicket.request_id}}
       </div>
 
       <div class="userDetailsDropOff item item-text-wrap">
         <img src = "http://placehold.it/100x100"><br>
         <p>Client: {{currentTicket.user.name}}<br>
-        Phone:{{currentTicket.user.phone_number}}<br>
+        Phone: <a href="tel:+852{{currentTicket.user.phone_number}}">{{currentTicket.user.phone_number}}</a><br>
         Car: {{currentTicket.user.car.color}} {{" ~ " + currentTicket.user.car.make}} {{" ~ " + currentTicket.user.car.license_plate}}<br>
         Car Park | Bay: {{currentTicket.parking_location.address}} | No. {{currentTicket.parking_location.bay_number}}<br>
 

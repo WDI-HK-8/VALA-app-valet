@@ -1,12 +1,48 @@
 /* Empty. Add your own CSS if you like */
+
+.landingBackGround {
+  background: url('/img/vala_nobg.png') no-repeat center center fixed; 
+ -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: 100%;
+  background-color: black;
+  z-index: 1;
+}
+
+#h2Landing {
+  color: white;
+  font-size: 24px;
+  margin-left: 65px;
+  margin-top: 400px;
+  position: absolute;
+  font-family: Gujarati Sangam MN;
+  font-weight: bold;
+  font-style: bold;
+}
+
+
+.signUp span{
+  font-size: 15px;
+  font-family: Gujarati Sangam MN;
+  vertical-align: center;
+}
+
+.signUp input{
+  font-size: 17px;
+  font-family: Gujarati Sangam MN;
+  vertical-align: center;
+}
+
+
+
 .angular-google-map-container { 
-  height: 700px; 
+  height: 600px; 
 }
 
 .legend{
-  margin-top: 80px;
+  margin-top: 55px;
   float: right;
-  width: 200px;
+  width: 180px;
   position: relative;
   font-size: 13px;
   background-color: rgba(255, 255, 255, 0.7);
@@ -34,6 +70,19 @@
   margin-bottom: -10px;
 }
 
+.userDetailAtHome{
+  font-size: 13px;
+  height: 160px;
+}
+
+.card .topDivPickUp{
+  background-color: rgb(135, 206, 250);
+}
+
+.card .topDivDropOff{
+  background-color: rgb(255, 192, 203);
+}
+
 .buttonDetail {
   float: right;
   margin: 10px; 
@@ -46,32 +95,37 @@
   margin-left: 10px;
   position: absolute;
   display: block;
+  font-size: 13px;
   
 }
 .userDetails img {
-  margin-left: 280px;
+  margin-left: 210px;
   position: absolute;
   display: block;
 }
 
 .userDetails {
-  height: 160px;
-  width: 280px;
+  height: 150px;
+  width: 200px;
 }
 
 .bayNumberSubmit{
-  height: 60px;
+  height: 40px;
 }
 
 .bayNumberSubmit span  {
   font-family: 'Helvetica Neue', Roboto, 'Segoe UI', sans-serif;
   font-size: 14px;
   font-color: rgb(102,102,102);
+  font-size: 13px;
+  margin-left: -5px;
+
 }
 
 .bayNumberSubmit label  {
-  width: 250px;
-  height: 30px;
+  width: 180px;
+  height: 26px;
+  font-size: 13px;
 }
 
 .bayNumberSubmit button{
@@ -83,17 +137,18 @@
   margin-left: 10px;
   position: absolute;
   display: block;
+  font-size: 13px;
   
 }
 .userDetailsDropOff img {
-  margin-left: 280px;
+  margin-left: 220px;
   position: absolute;
   display: block;
 }
 
 .userDetailsDropOff {
-  height: 200px;
-  width: 280px;
+  height: 220px;
+  width: 210px;
 }
 
 .codeSubmit{
@@ -113,4 +168,10 @@
 
 .codeSubmit button{
   margin-top: -50px;
+}
+
+.codeSubmit label  {
+  width: 180px;
+  height: 26px;
+  font-size: 13px;
 }
