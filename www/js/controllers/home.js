@@ -6,7 +6,6 @@ app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogle
   $cordovaGeolocation
     .getCurrentPosition(posOptions)
     .then(function (position) {
-      console.log(position)
       var lat  = position.coords.latitude
       var long = position.coords.longitude
       console.log(lat + long)
@@ -26,7 +25,6 @@ app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogle
   PrivatePubServices.logMessages('/valet/new');
 
   $scope.drawSelfMap = function(position) {
-    console.log("testing", position);
     $scope.$apply(function() {
       $scope.validateUser();
       $scope.myLocation.lng = position.coords.longitude;
