@@ -118,7 +118,7 @@ angular.module('starter.controllers', [])
           longitude: $scope.myLocation.lng
         },
         options: {
-            animation: google.maps.Animation.BOUNCE,
+            animation: google.maps.Animation.DROP,
             icon: 'img/man.png'
         }
       };
@@ -634,7 +634,7 @@ angular.module('starter.controllers', [])
           longitude: $scope.myLocation.lng
         },
         options: {
-            animation: google.maps.Animation.BOUNCE,
+            animation: google.maps.Animation.DROP,
             icon: 'img/man.png'
         }
       };
@@ -807,7 +807,7 @@ angular.module('starter.controllers', [])
           longitude: $scope.myLocation.lng
         },
         options: {
-            animation: google.maps.Animation.BOUNCE,
+            animation: google.maps.Animation.DROP,
             icon: 'img/man.png'
         }
       };

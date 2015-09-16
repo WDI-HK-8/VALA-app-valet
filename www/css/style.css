@@ -21,21 +21,20 @@
 }
 
 
-#h3Landing {
-  color: white;
-  font-size: 20px;
-  margin-left: 20px;
-  margin-top: 380px;
-  position: absolute;
+.signUp span{
+  font-size: 15px;
+  font-family: Gujarati Sangam MN;
+  vertical-align: center;
+}
+
+.signUp input{
+  font-size: 17px;
+  font-family: Gujarati Sangam MN;
+  vertical-align: center;
 }
 
 
-/*.landingBackGround h2 h3{
-  font-color: white !important;
-  font-size: 20px !important; 
-  z-index: 2;
-}
-*/
+
 .angular-google-map-container { 
   height: 600px; 
 }

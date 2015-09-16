@@ -29,7 +29,7 @@
           models  = "allMarkers"
           coords  = "'self'"
           icon    = "'icon'"
-          fit     = "'true'"
+          fit     = "true"
           click  =  "clickPin(this)">
           <ui-gmap-windows show="show">
             <div ng-non-bindable>
@@ -45,7 +45,7 @@
           stroke="p.stroke" 
           visible='p.visible'
           geodesic='p.geodesic' 
-          fit="false" 
+          fit="true" 
           editable="p.editable" 
           draggable="p.draggable" 
           icons="p.icons">
@@ -68,7 +68,7 @@
       <div class="item item-text-wrap userDetailAtHome">
         Client: {{currentLocation.name}}<br>
         Transmission: {{currentLocation.transmission}}<br>
-        Phone: {{currentLocation.phone}}<br>
+        Phone: <a href="tel:+852{{currentLocation.phone}}">{{currentLocation.phone}}</a><br>
         Address: {{currentLocation.location}}<br>
         EST.distance / time: {{currentLocation.distanceEST}} / {{currentLocation.timeEST}}
       </div>
@@ -85,7 +85,7 @@
       <div class="item item-text-wrap userDetailAtHome">
         Client: {{currentLocation.name}}<br>
         Transmission: {{currentLocation.transmission}}<br>
-        Phone: {{currentLocation.phone}}<br>
+        Phone: <a href="tel:+852{{currentLocation.phone}}">{{currentLocation.phone}}</a><br>
         Carpark: {{currentLocation.p_location | limitTo : 35}}<br>
         Drop off address: {{currentLocation.location | limitTo : 31}}<br>
         EST.distance / time (from car park to client): {{currentLocation.distanceEST}} / {{currentLocation.timeEST}}

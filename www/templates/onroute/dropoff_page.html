@@ -40,7 +40,7 @@
           visible='p.visible'
           geodesic='p.geodesic'
           static="true" 
-          fit="false" 
+          fit="true" 
           editable="p.editable" 
           draggable="p.draggable" 
           icons="p.icons">
@@ -53,7 +53,7 @@
           visible='p.visible'
           geodesic='p.geodesic'
           static="true" 
-          fit="false" 
+          fit="true" 
           editable="p.editable" 
           draggable="p.draggable" 
           icons="p.icons">
@@ -84,7 +84,7 @@
       <div class="userDetailsDropOff item item-text-wrap">
         <img src = "http://placehold.it/100x100"><br>
         <p>Client: {{currentTicket.user.name}}<br>
-        Phone:{{currentTicket.user.phone_number}}<br>
+        Phone: <a href="tel:+852{{currentTicket.user.phone_number}}">{{currentTicket.user.phone_number}}</a><br>
         Car: {{currentTicket.user.car.color}} {{" ~ " + currentTicket.user.car.make}} {{" ~ " + currentTicket.user.car.license_plate}}<br>
         Car Park | Bay: {{currentTicket.parking_location.address}} | No. {{currentTicket.parking_location.bay_number}}<br>
 
@@ -105,7 +105,7 @@
       <div class="userDetailsDropOff item item-text-wrap">
         <img src = "http://placehold.it/100x100"><br>
         <p>Client: {{currentTicket.user.name}}<br>
-        Phone:{{currentTicket.user.phone_number}}<br>
+        Phone: <a href="tel:+852{{currentTicket.user.phone_number}}">{{currentTicket.user.phone_number}}</a><br>
         Car: {{currentTicket.user.car.color}} {{" ~ " + currentTicket.user.car.make}} {{" ~ " + currentTicket.user.car.license_plate}}<br>
         Car Park | Bay: {{currentTicket.parking_location.address}} | No. {{currentTicket.parking_location.bay_number}}<br>
 
