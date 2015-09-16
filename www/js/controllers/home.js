@@ -1,5 +1,5 @@
 app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $state, $rootScope, PrivatePubServices, $window, $cordovaGeolocation){
-  nemSimpleLogger.doLog = true; //default is true
+  nemSimpleLogger.doLog = true; 
   nemSimpleLogger.currentLevel = nemSimpleLogger.LEVELS.debug
 
   var posOptions = {timeout: 10000, enableHighAccuracy: false};
@@ -10,7 +10,7 @@ app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogle
       var long = position.coords.longitude
       console.log(lat + long)
     }, function(err) {
-      // error
+      
     });
 
 
@@ -23,7 +23,6 @@ app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogle
   PrivatePubServices.logMessages('/valet/new');
 
   $scope.drawSelfMap = function(position) {
-    //$scope.$apply is needed to trigger the digest cycle when the geolocation arrives and to update all the watchers
     $scope.$apply(function() {
       $scope.validateUser();
       $scope.myLocation.lng = position.coords.longitude;
@@ -196,7 +195,6 @@ app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogle
 
             $scope.allMarkers.push(newMarker)
           }
-        // console.log($scope.allMarkers)
         })
       };
 
@@ -303,7 +301,6 @@ app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogle
 
             $scope.allMarkers.push(newMarker)
           }
-        // console.log($scope.allMarkers)
         })
       };
 
@@ -352,7 +349,6 @@ app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogle
 
             $scope.allMarkers.push(newMarker)
           }
-        // console.log($scope.allMarkers)
         })
       };
 
