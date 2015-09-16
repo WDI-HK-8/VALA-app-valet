@@ -1,4 +1,4 @@
-app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $state, $rootScope, PrivatePubServices, $window, $cordovaGeolocation){
+app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogleMapApi, $state, $rootScope, PrivatePubServices, $window, $cordovaGeolocation, $timeout){
   nemSimpleLogger.doLog = true; 
   nemSimpleLogger.currentLevel = nemSimpleLogger.LEVELS.debug
 
@@ -9,10 +9,12 @@ app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogle
       var lat  = position.coords.latitude
       var long = position.coords.longitude
       console.log(lat + long)
+      $timeout(function(){
+        $scope.drawSelfMap(position);
+      });
     }, function(err) {
       
     });
-
 
   $scope.myLocation = {
     lng : '',
@@ -79,6 +81,7 @@ app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogle
               }
             ];
           }
+          $scope.$apply();
         });
       };
 
@@ -290,6 +293,7 @@ app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogle
             createPickUpMarker(title, id, userName, userPic, transmission, userPhoneNum, latitude, longitude, address, distanceEST, timeEST, iconURL)
 
             $scope.allMarkers.push(newMarker)
+            $scope.$apply();
           }
         })
       };
@@ -338,6 +342,7 @@ app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogle
             createDropOffMarker(title, id, userName, userPic, transmission, userPhoneNum, p_latitude, p_longitude, p_address, latitude, longitude, address, distanceEST, timeEST, iconURL)
 
             $scope.allMarkers.push(newMarker)
+            $scope.$apply();
           }
         })
       };
@@ -352,10 +357,9 @@ app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogle
       });
 
       $http.get($scope.rootURL + "api/v1/requests/pickup").success(function(indexPickups){
-      for (var num = 0; num < indexPickups.length; num++){
-        runPickUpMarker(indexPickups[num],"Pick up ticket", 'img/blue-dot.png');
-      };
-
+        for (var num = 0; num < indexPickups.length; num++){
+          runPickUpMarker(indexPickups[num],"Pick up ticket", 'img/blue-dot.png');
+        };
       }).error(function(indexPickups){
         console.log(indexPickups);
       })
@@ -374,16 +378,13 @@ app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogle
           pan: 3
         };
 
-        }).error(function(indexDropoffs){
-          console.log(indexDropoffs);
+      }).error(function(indexDropoffs){
+        console.log(indexDropoffs);
       })
-
-
-
     });
   };
 
-  navigator.geolocation.getCurrentPosition($scope.drawSelfMap);
+
 
   $scope.valetReply = function(){
     var valetID = $scope.currentUser.id;

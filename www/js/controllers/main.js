@@ -16,7 +16,6 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $auth, $ionicP
       $window.localStorage.setItem('current-user', JSON.stringify(response));
       $scope.validateUser();
 
-      $state.go('app.home');
 
       var valetID = response.id;
       var url = $scope.rootURL + "api/v1/valets/" + valetID;
@@ -28,7 +27,7 @@ app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $auth, $ionicP
       };
 
       $http.patch(url, data).success(function(change_status){
-
+        $state.go('app.home');
       }).error(function(change_status){
         console.log(change_status);
       })
