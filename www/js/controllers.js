@@ -48,14 +48,15 @@ angular.module('starter.controllers', [])
   $scope.registrationForm = {};
 
   $scope.doSignup = function(){
-    $auth.submitRegistration($scope.registrationForm).then(function(response){
-      $window.localStorage.setItem('current-user', JSON.stringify(response.data.data));
-      $scope.validateUser();
+    // $auth.submitRegistration($scope.registrationForm).then(function(response){
+    //   $window.localStorage.setItem('current-user', JSON.stringify(response.data.data));
+    //   $scope.validateUser();
+      console.log($scope.registrationForm)
 
-      $state.go('app.home');
+    //   $state.go('app.home');
 
-    }).catch(function(response){
-    })
+    // }).catch(function(response){
+    // })
   };
 
   $scope.logout = function(){
