@@ -109,7 +109,7 @@ app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogle
       };
 
       var createCarParkMarker = function(title, latitude, longitude, address, p_icon){
-        $scope.carParkmarker =  {
+        return $scope.carParkmarker =  {
           id: "carpark",
           coords: {
             latitude: latitude,
@@ -176,7 +176,7 @@ app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogle
         var iconURL         = iconURL
 
         var distanceEST;
-        var timeEST
+        var timeEST;
 
         var matrixService   = new google.maps.DistanceMatrixService();
 
@@ -205,7 +205,6 @@ app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogle
         var parkingLocation       = indexElement.parking_location;
         var destinationLocation   = indexElement.destination_location;
         var id                    = indexElement.id;
-
 
         var userName              = user.name;
         var userPic               = user.profile_picture;
@@ -238,27 +237,18 @@ app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogle
           travelMode : google.maps.TravelMode.DRIVING
         }
 
-        matrixService.getDistanceMatrix(durationDistance, function(responseD, status){
+        matrixService.getDistanceMatrix(durationDistance, function(responseDrop, status){
           if (status == google.maps.DistanceMatrixStatus.OK){
-            distanceEST = responseD.rows[0].elements[0].distance.text;
-            timeEST     = responseD.rows[0].elements[0].duration.text;
+            distanceEST = responseDrop.rows[0].elements[0].distance.text;
+            timeEST     = responseDrop.rows[0].elements[0].duration.text;
 
             createDropOffMarker(title, id, userName, userPic, transmission, userPhoneNum, parkingLatitude, parkingLongitude, parkingAddress, destinationLatitude, destinationLongitude, destinationAddress, distanceEST, timeEST, iconURL)
 
             $scope.allMarkers.push(newMarker)
           }
-        console.log($scope.allMarkers)
+        // console.log($scope.allMarkers)
         })
       };
-
-      $http.get($scope.rootURL + "api/v1/requests/pickup").success(function(indexPickups){
-      for (var num = 0; num < indexPickups.length; num++){
-        runPickUpMarker(indexPickups[num],"Pick up ticket", 'img/blue-dot.png');
-      };
-
-      }).error(function(indexPickups){
-        console.log(indexPickups);
-      })
 
       var AddPickUpMarker = function(data, title, iconURL){
 
@@ -290,10 +280,10 @@ app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogle
           travelMode : google.maps.TravelMode.WALKING
         }
 
-        matrixService.getDistanceMatrix(durationDistance, function(responseD, status){
+        matrixService.getDistanceMatrix(durationDistance, function(responseDrop, status){
           if (status == google.maps.DistanceMatrixStatus.OK){
-            distanceEST = responseD.rows[0].elements[0].distance.text;
-            timeEST     = responseD.rows[0].elements[0].duration.text;
+            distanceEST = responseDrop.rows[0].elements[0].distance.text;
+            timeEST     = responseDrop.rows[0].elements[0].duration.text;
 
             transmission = transmission ? 'manual' : 'automatic';
 
@@ -352,17 +342,23 @@ app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogle
         })
       };
 
-
-      $scope.dropOffMarkers =[];
-
       PrivatePub.subscribe('/valet/new', function(data, channel) {
 
         if (data.request.type == 'pick_up'){
           AddPickUpMarker(data, "Pick up ticket", 'img/blue-dot.png')
-        } else{
+        } else if (data.request.type == 'drop_off'){
           AddDropOffMarker(data, "Drop off ticket", 'img/red-dot.png')
         }
       });
+
+      $http.get($scope.rootURL + "api/v1/requests/pickup").success(function(indexPickups){
+      for (var num = 0; num < indexPickups.length; num++){
+        runPickUpMarker(indexPickups[num],"Pick up ticket", 'img/blue-dot.png');
+      };
+
+      }).error(function(indexPickups){
+        console.log(indexPickups);
+      })
 
       $http.get($scope.rootURL + "api/v1/requests/dropoff").success(function(indexDropoffs){
         for (var num = 0; num < indexDropoffs.length; num++){
@@ -378,9 +374,11 @@ app.controller('HomeCtrl', function($scope, $http, nemSimpleLogger, uiGmapGoogle
           pan: 3
         };
 
-      }).error(function(indexDropoffs){
-        console.log(indexDropoffs);
+        }).error(function(indexDropoffs){
+          console.log(indexDropoffs);
       })
+
+
 
     });
   };
